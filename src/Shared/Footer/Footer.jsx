@@ -3,10 +3,10 @@ import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const socials = [
-    { icon: <Facebook size={20} />, href: 'https://facebook.com' },
+    { icon: <Facebook size={20} />, href: 'https://www.facebook.com/md.abu.sufian.158992' },
     { icon: <Instagram size={20} />, href: 'https://instagram.com' },
     { icon: <Twitter size={20} />, href: 'https://twitter.com' },
-    { icon: <Mail size={20} />, href: 'mailto:support@matrimoji.com' },
+    { icon: <Mail size={20} />, href: 'mailto:support@luxematches.com' },
 ];
 
 const Footer = () => {
