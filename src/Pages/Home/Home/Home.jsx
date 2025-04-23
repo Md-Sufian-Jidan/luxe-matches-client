@@ -1,6 +1,7 @@
 import Banner from "../Banner/Banner";
 import PremiumBiodata from "../PremiumBiodata/PremiumBiodata";
 import SuccessCounter from "../SuccessCounter/SuccessCounter";
+import SuccessStories from "../SuccessStories/SuccessStories";
 
 const Home = () => {
     return (
@@ -8,6 +9,7 @@ const Home = () => {
             <Banner />
             <PremiumBiodata />
             <SuccessCounter />
+            <SuccessStories />
         </div>
     );
 };
