@@ -66,7 +66,7 @@ const BioDataDetails = () => {
         navigate(`/checkout/${biodataId}`);
     };
 
-    if (!biodata) return <p className="text-center mt-10">Loading...</p>;
+    if (!biodata) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>;
 
     return (
         <div className="max-w-5xl mx-auto px-4 py-10">

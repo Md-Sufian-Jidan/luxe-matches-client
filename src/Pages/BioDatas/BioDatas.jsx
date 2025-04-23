@@ -27,8 +27,7 @@ const BioDatas = () => {
     const [divisionFilter, setDivisionFilter] = useState('');
     const [ageRange, setAgeRange] = useState([18, 40]);
     const navigate = useNavigate();
-
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
 
     const filtered = mockBiodatas.filter((b) => {
         return (
@@ -43,6 +42,8 @@ const BioDatas = () => {
         if (!user) navigate('/login');
         else navigate(`/biodata/${id}`);
     };
+
+    if (loading) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-4 gap-6">

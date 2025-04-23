@@ -6,7 +6,8 @@ const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
     const location = useLocation();
 
-    if (loading) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-violet-600 mx-auto max-w-16"></div>
+    if (!user) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>
+    if (loading) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>
 
     if (user) return children;
 
