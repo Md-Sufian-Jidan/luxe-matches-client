@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import clsx from 'clsx';
 import useAuth from '../../Hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const navLinks = [
     { name: 'Home', path: '/' },
@@ -25,6 +26,25 @@ const Navbar = () => {
     const { user, logOut } = useAuth();
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen((prev) => !prev);
+    const handleLogout = () => {
+        logOut()
+            .then(res => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'User Logout successfully.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: err.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
+    };
 
     return (
         <motion.nav
@@ -76,7 +96,13 @@ const Navbar = () => {
 
                     <motion.div whileHover={{ scale: 1.1 }}>
                         {user ? (
-                            <NavLink to="/dashboard" className="text-rose-600 font-semibold">
+                            <NavLink to="/dashboard"
+                                className={({ isActive }) =>
+                                    clsx(
+                                        'text-gray-700 font-medium hover:text-rose-500 transition',
+                                        isActive && 'text-rose-600 font-semibold'
+                                    )
+                                }>
                                 Dashboard
                             </NavLink>
                         ) : (
@@ -88,6 +114,15 @@ const Navbar = () => {
                             </Link>
                         )}
                     </motion.div>
+                    {user && (
+                        <motion.button
+                            onClick={handleLogout}
+                            whileHover={{ scale: 1.05 }}
+                            className="bg-rose-100 text-rose-600 px-4 py-1.5 rounded-full hover:bg-rose-200 transition"
+                        >
+                            Logout
+                        </motion.button>
+                    )}
                 </div>
 
                 {/* Mobile Toggle */}
@@ -135,7 +170,12 @@ const Navbar = () => {
                                     <NavLink
                                         to="/dashboard"
                                         onClick={toggleMenu}
-                                        className="text-rose-600 font-semibold"
+                                        className={({ isActive }) =>
+                                            clsx(
+                                                'text-gray-700 font-medium hover:text-rose-500 transition',
+                                                isActive && 'text-rose-600 font-semibold'
+                                            )
+                                        }
                                     >
                                         Dashboard
                                     </NavLink>
