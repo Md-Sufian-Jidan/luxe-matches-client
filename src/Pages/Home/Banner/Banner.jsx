@@ -9,17 +9,17 @@ const slides = [
     {
         title: 'Discover your dream match',
         subtitle: 'Elegant. Trusted. Personal.',
-        bg: 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&w=1400&q=80',
+        bg: 'https://i.ibb.co/cdkzGrc/A-romantic-sunset-scene-at-a-beach-with-a-couple-walking-hand-in-hand-soft-golden-light-warm-tones-e.jpg',
     },
     {
         title: 'Find love that lasts forever',
         subtitle: 'LuxeMatches — Because your story deserves luxury.',
-        bg: 'https://images.unsplash.com/photo-1589832904700-8b4b5d6c8f9f?auto=format&fit=crop&w=1400&q=80',
+        bg: 'https://i.ibb.co/gnfHDrG/An-elegant-wedding-setup-in-an-outdoor-garden-white-flowers-gold-accents-candlelight-glow-dreamy-bok.jpg',
     },
     {
         title: 'Create memories that matter',
         subtitle: 'Thousands of successful matches and counting.',
-        bg: 'https://images.unsplash.com/photo-1614728894743-d77d3c8df3d4?auto=format&fit=crop&w=1400&q=80',
+        bg: 'https://i.ibb.co/0RPchnPr/slide-3.jpg',
     },
 ];
 
