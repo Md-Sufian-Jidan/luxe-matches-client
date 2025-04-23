@@ -1,7 +1,11 @@
+import Banner from "../Banner/Banner";
+import PremiumBiodata from "../PremiumBiodata/PremiumBiodata";
+
 const Home = () => {
     return (
         <div>
-            home2
+            <Banner />
+            <PremiumBiodata />
         </div>
     );
 };
