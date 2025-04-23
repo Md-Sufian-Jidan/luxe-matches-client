@@ -57,7 +57,7 @@ const Dashboard = () => {
                         transition={{ duration: 0.3 }}
                         className="w-64 bg-white shadow-md p-6 space-y-6 md:block fixed md:relative top-0 left-0 z-40 h-full md:h-auto"
                     >
-                        <h2 className="text-2xl font-bold text-rose-600 hidden md:block">LuxeMatches</h2>
+                        <h2 className="md:text-2xl text-xl font-bold text-rose-600 md:block">LuxeMatches</h2>
                         <nav className="flex flex-col gap-2">
                             {navItems.map((item) => (
                                 <NavLink
@@ -86,7 +86,7 @@ const Dashboard = () => {
             </AnimatePresence>
 
             {/* Main Content */}
-            <div className="flex-1 p-6 md:ml-64 mt-0 md:mt-0">
+            <div className="flex-1 p-6 mt-0 md:mt-0">
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
