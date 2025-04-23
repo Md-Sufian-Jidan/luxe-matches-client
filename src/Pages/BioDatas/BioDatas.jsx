@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import useAuth from '../../Hooks/useAuth';
 
 const divisions = [
     'Dhaka',
@@ -27,7 +28,7 @@ const BioDatas = () => {
     const [ageRange, setAgeRange] = useState([18, 40]);
     const navigate = useNavigate();
 
-    const isLoggedIn = false; // Replace with auth state
+    const { user } = useAuth();
 
     const filtered = mockBiodatas.filter((b) => {
         return (
@@ -39,7 +40,7 @@ const BioDatas = () => {
     });
 
     const handleView = (id) => {
-        if (!isLoggedIn) navigate('/login');
+        if (!user) navigate('/login');
         else navigate(`/biodata/${id}`);
     };
 

@@ -24,7 +24,7 @@ const SuccessCounter = () => {
                             className="bg-white p-6 rounded-xl shadow-md"
                         >
                             <h3 className={`text-4xl font-extrabold ${counter.color}`}>
-                                <CountUp end={counter.count} duration={2} />
+                                <CountUp end={counter.count} duration={5} />
                             </h3>
                             <p className="mt-2 text-sm text-gray-700 font-medium">{counter.title}</p>
                         </motion.div>
