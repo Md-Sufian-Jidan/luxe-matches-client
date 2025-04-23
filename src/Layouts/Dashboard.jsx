@@ -20,8 +20,8 @@ const Dashboard = () => {
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
     const userLinks = [
-        { name: 'Edit Biodata', to: 'edit', icon: <User size={18} /> },
-        { name: 'View Biodata', to: 'view', icon: <LayoutDashboard size={18} /> },
+        { name: 'Edit Biodata', to: 'edit-bio-data', icon: <User size={18} /> },
+        { name: 'View Biodata', to: 'view-bio-data', icon: <LayoutDashboard size={18} /> },
         { name: 'My Favourites', to: 'favourites', icon: <Star size={18} /> },
         { name: 'My Contact Requests', to: 'requests', icon: <Mail size={18} /> },
         { name: 'Got Married', to: 'married', icon: <BadgeCheck size={18} /> },

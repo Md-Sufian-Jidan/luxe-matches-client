@@ -1,238 +1,352 @@
-import { useForm, Controller } from 'react-hook-form';
-// import { z } from 'zod';
-// import { zodResolver } from '@hookform/resolvers/zod';
-import Select from 'react-select';
+import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import useAuth from '../../../Hooks/useAuth';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
+import { useQuery } from '@tanstack/react-query'
 
-// ----- CONSTANTS -----
-const genderOptions = [
-    { label: 'Male', value: 'Male' },
-    { label: 'Female', value: 'Female' },
-];
-const divisionOptions = [
-    'Dhaka', 'Chattogram', 'Rangpur', 'Barisal',
-    'Khulna', 'Maymansign', 'Sylhet',
-].map((d) => ({ label: d, value: d }));
-const heightOpt = ['4\'8"', '5\'0"', '5\'4"', '5\'8"', '6\'0"'].map((h) => ({ label: h, value: h }));
-const weightOpt = ['45 kg', '55 kg', '65 kg', '75 kg'].map((w) => ({ label: w, value: w }));
-const occOpt = ['Student', 'Job', 'Housewife'].map((o) => ({ label: o, value: o }));
-const raceOpt = ['Asian', 'Arab', 'Caucasian', 'African'].map((r) => ({ label: r, value: r }));
-
-// ----- ZOD SCHEMA -----
-// const schema = z.object({
-//   biodataType: z.string(),
-//   name: z.string().min(2),
-//   photo: z.string().url({ message: 'Must be a valid URL' }),
-//   dob: z.string(),
-//   height: z.string(),
-//   weight: z.string(),
-//   age: z.number().min(18),
-//   occupation: z.string(),
-//   race: z.string(),
-//   fathersName: z.string().min(2),
-//   mothersName: z.string().min(2),
-//   permanentDivision: z.string(),
-//   presentDivision: z.string(),
-//   expPartnerAge: z.string(),
-//   expPartnerHeight: z.string(),
-//   expPartnerWeight: z.string(),
-//   contactEmail: z.string().email(),
-//   mobile: z.string().min(10),
-// });
+// 🔸 Mock fetch helpers – replace with real API calls
+const fetchExistingBiodata = async () => null;          // GET /api/biodata/me
+const saveOrUpdateBiodata = async (data) => console.log('Sent →', data);
 
 const EditBioData = () => {
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const {
-        handleSubmit,
-        control,
         register,
-        formState: { errors },
-    } = useForm();
-    // {
-    //     resolver: zodResolver(schema),
-    //     defaultValues: {
-    //         ...defaultValues,
-    //         contactEmail: user.email,    // readonly
-    //     },
-    // }
+        handleSubmit,
+        setValue,
+        reset,
+        watch,
+        formState: { errors, },
+    } = useForm({
+        defaultValues: {
+            bioDataType: '',
+            name: '',
+            image: '',
+            dob: '',
+            height: '',
+            weight: '',
+            age: '',
+            occupation: '',
+            race: '',
+            fathersName: '',
+            mothersName: '',
+            permanentDivision: '',
+            presentDivision: '',
+            expectedPartnerAge: '',
+            expectedPartnerHeight: '',
+            expectedPartnerWeight: '',
+            contactEmail: user?.email,
+            mobile: ''
+        }
+    });
+    const { data: bioData, isLoading } = useQuery({
+        queryKey: ['bioData'],
+        enabled: !!user?.email,
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/get-bio-data/${user?.email}`);
+            return res.data;
+        },
+    });
 
     const onSubmit = async (data) => {
-        /* 🔄 call POST / PUT endpoint */
-        console.log(data);
+        setIsSubmitting(true);
+        const bioData = {
+            bioDataId: bioData.bioData.bioDataId + 1,
+            bioDataType: data.bioDataType,
+            name: data.name,
+            image: data.image,
+            dob: data.dob,
+            height: data.height,
+            weight: data.weight,
+            age: data.age,
+            occupation: data.occupation,
+            race: data.race,
+            fathersName: data.fathersName,
+            mothersName: data.mothersName,
+            permanentDivision: data.permanentDivision,
+            presentDivision: data.presentDivision,
+            expectedPartnerAge: data.expectedPartnerAge,
+            expectedPartnerHeight: data.expectedPartnerHeight,
+            expectedPartnerWeight: data.expectedPartnerWeight,
+            contactEmail: data.contactEmail,
+            mobile: data.mobile,
+        };
+        axiosSecure.patch(`/bio-data-edit/${user?.email}`, bioData)
+            .then(res => {
+                console.log(res.data);
+                if (res.data.matchedCount > 0) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'BioData edited successfully.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    console.log(res.data);
+                    reset();
+                    setIsSubmitting(false);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
+    const divisions = ['Dhaka', 'Chattogram', 'Rangpur', 'Barisal', 'Khulna', 'Maymansign', 'Sylhet',];
+    const heights = ["4'8\"", "5'0\"", "5'4\"", "5'8\"", "6'0\""];
+    const weights = ['45 kg', '50 kg', '55 kg', '60 kg', '70 kg', '80 kg'];
+    const occupations = ['Student', 'Job', 'Housewife', 'Engineer', 'Doctor'];
+    const races = ['Asian', 'Arab', 'African', 'Other'];
 
-    // Quick error helper
-    const err = (k) => errors[k]?.message;
+    if (isLoading) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>
 
     return (
-        <motion.form
-            onSubmit={handleSubmit(onSubmit)}
-            initial={{ opacity: 0, y: 20 }}
+        <motion.div
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6 bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto"
+            transition={{ duration: 0.4 }}
+            className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8"
         >
-            <h2 className="text-2xl font-bold text-rose-600 mb-2">Edit Biodata</h2>
-
-            {/* 2‑column grid */}
-            <div className="grid md:grid-cols-2 gap-4">
-
+            <h2 className="text-2xl font-bold text-rose-600 mb-6">
+                {watch('biodataId') ? 'Edit Your Biodata' : 'Create Your Biodata'}
+            </h2>
+            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Biodata Type */}
                 <div>
-                    <label className="font-medium">Biodata Type *</label>
-                    <Controller
-                        name="biodataType"
-                        control={control}
-                        render={({ field }) =>
-                            <Select options={genderOptions} {...field} />
-                        }
+                    <label className="block text-sm font-medium mb-1">Biodata Type *</label>
+                    <select
+                        {...register('bioDataType', { required: 'Select Male or Female' })}
+                        className="w-full border rounded px-3 py-2"
+                        defaultValue={bioData?.bioData?.bioDataType}
+                    >
+                        <option value="">Choose...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    {errors.bioDataType && <p className="text-red-500 text-xs">{errors.bioDataType.message}</p>}
+                </div>
+                {/* Name */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Name *</label>
+                    <input
+                        type="text"
+                        {...register('name', { required: 'Name required' })}
+                        className="w-full border rounded px-3 py-2"
+                        defaultValue={bioData?.bioData?.name}
                     />
-                    <span className="text-xs text-red-500">{err('biodataType')}</span>
+                    {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
                 </div>
-
+                {/* Profile Image */}
                 <div>
-                    <label className="font-medium">Name *</label>
-                    <input {...register('name')} className="input" />
-                    <span className="error">{err('name')}</span>
-                </div>
-
-                <div>
-                    <label className="font-medium">Profile Image URL *</label>
-                    <input {...register('photo')} className="input" />
-                    <span className="error">{err('photo')}</span>
-                </div>
-
-                <div>
-                    <label className="font-medium">Date of Birth *</label>
-                    <input type="date" {...register('dob')} className="input" />
-                    <span className="error">{err('dob')}</span>
-                </div>
-
-                <div>
-                    <label className="font-medium">Height *</label>
-                    <Controller
-                        name="height"
-                        control={control}
-                        render={({ field }) => <Select options={heightOpt} {...field} />}
+                    <label className="block text-sm font-medium mb-1">Profile Image URL *</label>
+                    <input
+                        type="url"
+                        defaultValue={bioData.bioData.image}
+                        {...register('image', { required: 'Image link required' })}
+                        className="w-full border rounded px-3 py-2"
                     />
-                    <span className="error">{err('height')}</span>
+                    {errors.image && <p className="text-red-500 text-xs">{errors.image.message}</p>}
                 </div>
-
+                {/* Date of Birth */}
                 <div>
-                    <label className="font-medium">Weight *</label>
-                    <Controller
-                        name="weight"
-                        control={control}
-                        render={({ field }) => <Select options={weightOpt} {...field} />}
+                    <label className="block text-sm font-medium mb-1">Date of Birth *</label>
+                    <input
+                        type="date"
+                        {...register('dob', { required: 'Select DOB' })}
+                        className="w-full border rounded px-3 py-2"
+                        defaultValue={bioData.bioData.dob}
                     />
-                    <span className="error">{err('weight')}</span>
+                    {errors.dob && <p className="text-red-500 text-xs">{errors.dob.message}</p>}
                 </div>
-
+                {/* Height */}
                 <div>
-                    <label className="font-medium">Age *</label>
-                    <input type="number" {...register('age', { valueAsNumber: true })} className="input" />
-                    <span className="error">{err('age')}</span>
+                    <label className="block text-sm font-medium mb-1">Height *</label>
+                    <select
+                        {...register('height', { required: 'Height required' })}
+                        defaultValue={bioData.bioData.height}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {heights.map((h) => (
+                            <option key={h}>{h}</option>
+                        ))}
+                    </select>
+                    {errors.height && <p className="text-red-500 text-xs">{errors.height.message}</p>}
                 </div>
-
+                {/* Weight */}
                 <div>
-                    <label className="font-medium">Occupation *</label>
-                    <Controller
-                        name="occupation"
-                        control={control}
-                        render={({ field }) => <Select options={occOpt} {...field} />}
+                    <label className="block text-sm font-medium mb-1">Weight *</label>
+                    <select
+                        defaultValue={bioData.bioData.weight}
+                        {...register('weight', { required: 'Weight required' })}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {weights.map((w) => (
+                            <option key={w}>{w}</option>
+                        ))}
+                    </select>
+                    {errors.weight && <p className="text-red-500 text-xs">{errors.weight.message}</p>}
+                </div>
+                {/* Age */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Age *</label>
+                    <input
+                        defaultValue={bioData.bioData.age}
+                        type="number"
+                        {...register('age', { required: 'Age required', min: 18, max: 99 })}
+                        className="w-full border rounded px-3 py-2"
                     />
-                    <span className="error">{err('occupation')}</span>
+                    {errors.age && <p className="text-red-500 text-xs">{errors.age.message}</p>}
                 </div>
-
+                {/* Occupation */}
                 <div>
-                    <label className="font-medium">Race *</label>
-                    <Controller
-                        name="race"
-                        control={control}
-                        render={({ field }) => <Select options={raceOpt} {...field} />}
-                    />
-                    <span className="error">{err('race')}</span>
+                    <label className="block text-sm font-medium mb-1">Occupation *</label>
+                    <select
+                        defaultValue={bioData.bioData.occupation}
+                        {...register('occupation', { required: 'Occupation required' })}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {occupations.map((o) => (
+                            <option key={o}>{o}</option>
+                        ))}
+                    </select>
+                    {errors.occupation && <p className="text-red-500 text-xs">{errors.occupation.message}</p>}
                 </div>
-
+                {/* Race */}
                 <div>
-                    <label className="font-medium">Father's Name *</label>
-                    <input {...register('fathersName')} className="input" />
-                    <span className="error">{err('fathersName')}</span>
+                    <label className="block text-sm font-medium mb-1">Race *</label>
+                    <select
+                        defaultValue={bioData.bioData.race}
+                        {...register('race', { required: 'Race required' })}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {races.map((r) => (
+                            <option key={r}>{r}</option>
+                        ))}
+                    </select>
+                    {errors.race && <p className="text-red-500 text-xs">{errors.race.message}</p>}
                 </div>
-
+                {/* Fathers & Mothers Names */}
                 <div>
-                    <label className="font-medium">Mother's Name *</label>
-                    <input {...register('mothersName')} className="input" />
-                    <span className="error">{err('mothersName')}</span>
-                </div>
-
-                <div>
-                    <label className="font-medium">Permanent Division *</label>
-                    <Controller
-                        name="permanentDivision"
-                        control={control}
-                        render={({ field }) => <Select options={divisionOptions} {...field} />}
-                    />
-                    <span className="error">{err('permanentDivision')}</span>
-                </div>
-
-                <div>
-                    <label className="font-medium">Present Division *</label>
-                    <Controller
-                        name="presentDivision"
-                        control={control}
-                        render={({ field }) => <Select options={divisionOptions} {...field} />}
-                    />
-                    <span className="error">{err('presentDivision')}</span>
-                </div>
-
-                <div>
-                    <label className="font-medium">Expected Partner Age</label>
-                    <input {...register('expPartnerAge')} className="input" />
-                </div>
-
-                <div>
-                    <label className="font-medium">Expected Partner Height *</label>
-                    <Controller
-                        name="expPartnerHeight"
-                        control={control}
-                        render={({ field }) => <Select options={heightOpt} {...field} />}
-                    />
-                </div>
-
-                <div>
-                    <label className="font-medium">Expected Partner Weight *</label>
-                    <Controller
-                        name="expPartnerWeight"
-                        control={control}
-                        render={({ field }) => <Select options={weightOpt} {...field} />}
+                    <label className="block text-sm font-medium mb-1">Father’s Name *</label>
+                    <input
+                        defaultValue={bioData.bioData.fathersName}
+                        type="text"
+                        {...register('fathersName', { required: true })}
+                        className="w-full border rounded px-3 py-2"
                     />
                 </div>
-
                 <div>
-                    <label className="font-medium">Contact Email (readonly)</label>
-                    <input disabled {...register('contactEmail')} className="input bg-gray-100" />
+                    <label className="block text-sm font-medium mb-1">Mother’s Name *</label>
+                    <input
+                        defaultValue={bioData.bioData.mothersName}
+                        type="text"
+                        {...register('mothersName', { required: true })}
+                        className="w-full border rounded px-3 py-2"
+                    />
                 </div>
-
+                {/* Divisions */}
                 <div>
-                    <label className="font-medium">Mobile Number *</label>
-                    <input {...register('mobile')} className="input" />
-                    <span className="error">{err('mobile')}</span>
+                    <label className="block text-sm font-medium mb-1">Permanent Division *</label>
+                    <select
+                        defaultValue={bioData.bioData.permanentDivision}
+                        {...register('permanentDivision', { required: true })}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {divisions.map((d) => (
+                            <option key={d}>{d}</option>
+                        ))}
+                    </select>
                 </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Present Division *</label>
+                    <select
+                        defaultValue={bioData.bioData.presentDivision}
+                        {...register('presentDivision', { required: true })}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {divisions.map((d) => (
+                            <option key={d}>{d}</option>
+                        ))}
+                    </select>
+                </div>
+                {/* Partner Expectations */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Expected Partner Age *</label>
+                    <input
+                        defaultValue={bioData.bioData.expectedPartnerAge}
+                        type="text"
+                        {...register('expectedPartnerAge', { required: true })}
+                        placeholder="e.g. 25‑32"
+                        className="w-full border rounded px-3 py-2"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Expected Partner Height *</label>
+                    <select
+                        defaultValue={bioData.bioData.expectedPartnerHeight}
+                        {...register('expectedPartnerHeight', { required: true })}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {heights.map((h) => (
+                            <option key={h}>{h}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Expected Partner Weight *</label>
+                    <select
+                        defaultValue={bioData.bioData.expectedPartnerWeight}
+                        {...register('expectedPartnerWeight', { required: true })}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Choose...</option>
+                        {weights.map((w) => (
+                            <option key={w}>{w}</option>
+                        ))}
+                    </select>
+                </div>
+                {/* Contact Email (readonly) */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Your Email (readonly)</label>
+                    <input
+                        type="email"
+                        {...register('contactEmail')}
+                        defaultValue={user?.email}
+                        className="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
+                    />
+                </div>
+                {/* Mobile */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Mobile Number *</label>
+                    <input
+                        defaultValue={bioData.bioData.mobile}
+                        type="tel"
+                        {...register('mobile', { required: true })}
+                        className="w-full border rounded px-3 py-2"
+                    />
+                </div>
+            </form>
+            {/* Footer Buttons */}
+            <div className="mt-8 flex justify-end">
+                <button
+                    onClick={handleSubmit(onSubmit)}
+                    disabled={isSubmitting}
+                    className="bg-rose-600 text-white px-6 py-2 rounded hover:bg-rose-700 disabled:opacity-60 transition"
+                >
+                    {isSubmitting ? 'Saving…' : 'Save & Publish Now'}
+                </button>
             </div>
-
-            {/*  Save button */}
-            <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="bg-rose-600 text-white px-6 py-2 rounded-md shadow hover:bg-rose-700"
-            >
-                Save &amp; Publish Now
-            </motion.button>
-        </motion.form>
+        </motion.div>
     );
 }
 
-/* Tailwind helpers */
-const input = `
-  w-full border rounded px-3 py-2 text-sm focus:outline-rose-400
-`;
-
-export default EditBioData
+export default EditBioData;

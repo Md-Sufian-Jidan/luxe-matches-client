@@ -10,6 +10,7 @@ import PrivateRoute from "./PrivateRoute";
 import BioDataDetails from "../Pages/BioDatas/BioDataDetails";
 import Dashboard from "../Layouts/Dashboard";
 import EditBioData from "../Pages/Dashboard/EditBioData/EditBioData";
+import ViewBioData from "../Pages/Dashboard/ViewBioData/ViewBioData";
 
 export const router = createBrowserRouter([
     {
@@ -43,9 +44,13 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
         children: [
             {
-                path: '/dashboard/edit',
+                path: '/dashboard/edit-bio-data',
                 element: <EditBioData />
-            }
+            },
+            {
+                path: '/dashboard/view-bio-data',
+                element: <ViewBioData />
+            },
         ]
     }
 ]);
