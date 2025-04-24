@@ -84,8 +84,7 @@ const EditBioData = () => {
                         title: 'BioData edited successfully.',
                         showConfirmButton: false,
                         timer: 1500
-                    })
-                    console.log(res.data);
+                    });
                     reset();
                     setIsSubmitting(false);
                 }

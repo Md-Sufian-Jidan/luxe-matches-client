@@ -5,6 +5,7 @@ import { CheckCircle, X } from 'lucide-react';
 import useAuth from '../../../Hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
 
 const ViewBioData = () => {
     // const [bioData, setBioData] = useState(null);
@@ -22,11 +23,18 @@ const ViewBioData = () => {
             return res.data;
         },
     });
-    console.log(bioData);
 
     const handleMakePremium = async () => {
         setSending(true);
-        await axios.post('/api/premium‑request', { bioDataId: bioData.bioDataId });
+        axiosSecure.post(`/make-bio-data-premium-request`, { bioData })
+            .then(res => {
+                Swal.fire({
+                    icon: 'success',
+                    title: "Success",
+                    text: "Your bioData is Processing for the Premium",
+                });
+                console.log(res.data);
+            })
         setSending(false);
         setRequestSent(true);
     };
@@ -45,11 +53,10 @@ const ViewBioData = () => {
             >
                 <div className="flex flex-col md:flex-row gap-6">
                     <img
-                        src={bioData.bioData.image}
+                        src={bioData?.photoURL}
                         alt="profile"
                         className="w-40 h-40 rounded-full object-cover self-center"
                     />
-
                     {/* info grid */}
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                         {[
@@ -79,9 +86,8 @@ const ViewBioData = () => {
                         ))}
                     </div>
                 </div>
-
                 {/* Premium button */}
-                {!bioData.isPremium && (
+                {!bioData?.bioData.isPremium && (
                     <div className="text-right mt-8">
                         <button
                             onClick={() => setModalOpen(true)}
@@ -91,7 +97,7 @@ const ViewBioData = () => {
                         </button>
                     </div>
                 )}
-                {bioData.isPremium && (
+                {bioData?.bioData.isPremium && (
                     <p className="mt-6 flex items-center gap-2 text-emerald-600 font-semibold">
                         <CheckCircle size={18} /> You are already a Premium member
                     </p>
@@ -127,9 +133,18 @@ const ViewBioData = () => {
                                 </p>
 
                                 {requestSent ? (
-                                    <p className="mt-6 text-emerald-600 text-sm font-medium">
-                                        ✅ Request sent! You’ll be notified once approved.
-                                    </p>
+                                    <div>
+                                        <p className="mt-6 text-emerald-600 text-sm font-medium">
+                                            ✅ Request sent! You’ll be notified once approved.
+                                        </p>
+                                        <button
+                                            disabled={sending}
+                                            onClick={() => setModalOpen(false)}
+                                            className="px-4 py-1.5 rounded border text-gray-600 hover:bg-gray-50 mt-5"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
                                 ) : (
                                     <div className="mt-6 flex justify-end gap-3">
                                         <button

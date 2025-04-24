@@ -2,19 +2,29 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, Menu, X, LayoutDashboard, User, Star, Users, BadgeCheck, Mail } from 'lucide-react';
+import useAuth from '../Hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const Dashboard = () => {
-    const [isAdmin, setIsAdmin] = useState(false); // replace with real check
+    const [isAdmin, setIsAdmin] = useState(true); // replace with real check
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
+    const { logOut } = useAuth();
 
-    useEffect(() => {
-        setIsAdmin(localStorage.getItem('role') === 'admin');
-    }, []);
+    // useEffect(() => {
+    //     setIsAdmin(localStorage.getItem('role') === 'admin');
+    // }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('role');
-        navigate('/login');
+        logOut()
+            .then(res => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'User Logout successfully.',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            })
     };
 
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
