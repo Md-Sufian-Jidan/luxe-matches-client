@@ -17,7 +17,7 @@ const ApprovePremium = () => {
         enabled: !!user?.email,
         queryFn: async () => {
             setLoading(true);
-            const res = await axiosSecure.get('/premium-requests');
+            const res = await axiosSecure.get('/admin/premium-requests');
             const premiums = res.data;
             const r = premiums.filter((premium) => premium.isPremium === 'false');
             setLoading(false);

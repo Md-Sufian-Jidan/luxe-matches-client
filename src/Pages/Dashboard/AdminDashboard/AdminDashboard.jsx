@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import axios from 'axios';
+// import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 const data = {
     total: 400,
     male: 220,
@@ -11,10 +13,16 @@ const data = {
 };
 
 const AdminDashboard = () => {
-    const [stats, setStats] = useState(data);
+    const axiosSecure = useAxiosSecure();
 
-    // const { data } = await axios.get('/api/admin/stats'); // auth token in header
-    // setStats(data);
+    const { data: stats = [] } = useQuery({
+        queryKey: ['stats'],
+        queryFn: async () => {
+            const res = await axiosSecure.get('/admin-stats');
+            console.log(res);
+            return res.data;
+        },
+    });
 
     if (!stats) return <p className="text-center mt-10">Loading…</p>;
 

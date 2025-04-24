@@ -19,7 +19,7 @@ const ViewBioData = () => {
         queryKey: ['bioData'],
         enabled: !!user?.email,
         queryFn: async () => {
-            const res = await axiosSecure.get(`/get-bio-data/${user?.email}`);
+            const res = await axiosSecure.get(`/user/get-bio-data/${user?.email}`);
             return res.data?.result;
         },
     });
@@ -27,7 +27,7 @@ const ViewBioData = () => {
     console.log(bioData);
     const handleMakePremium = async () => {
         setSending(true);
-        axiosSecure.post(`/make-bio-data-premium-request`, { bioData })
+        axiosSecure.post(`/user/make-bio-data-premium-request`, { bioData })
             .then(res => {
                 Swal.fire({
                     icon: 'success',

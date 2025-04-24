@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../Hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
@@ -130,13 +130,13 @@ const BioDatas = () => {
                                             </p>
                                         </div>
 
-                                        <button
-                                            onClick={() => handleView(profile._id)}
+                                        <Link
+                                            to={`/user/view-bioData/${profile?._id}`}
                                             className="mt-5 inline-flex items-center gap-1 bg-rose-600 text-white px-4 py-1.5 rounded-full text-sm
    hover:bg-rose-700 transition focus:outline-none focus:ring-2 focus:ring-rose-400"
                                         >
                                             View Profile
-                                        </button>
+                                        </Link>
                                     </div>
                                 </motion.div>
                             ))

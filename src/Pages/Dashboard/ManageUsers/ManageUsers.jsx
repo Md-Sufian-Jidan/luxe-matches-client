@@ -42,7 +42,7 @@ const ManageUsers = () => {
                         u._id === id ? { ...u, [field]: !u[field] } : u
                     )
                 );
-                await axiosSecure.patch(`/make-admin/make-premium/${id}`, { [field]: true })
+                await axiosSecure.patch(`/admin/make-admin/make-premium/${id}`, { [field]: true })
                     .then(res => {
                         Swal.fire({
                             title: "Success!",

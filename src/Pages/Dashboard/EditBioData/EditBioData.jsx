@@ -48,7 +48,7 @@ const EditBioData = () => {
         queryKey: ['bioData'],
         enabled: !!user?.email,
         queryFn: async () => {
-            const res = await axiosSecure.get(`/get-bio-data/${user?.email}`);
+            const res = await axiosSecure.get(`/user/get-bio-data/${user?.email}`);
             setCount(res.data?.count);
             return res.data?.result;
         },
@@ -77,7 +77,7 @@ const EditBioData = () => {
             contactEmail: data.contactEmail,
             mobile: data.mobile,
         };
-        axiosSecure.patch(`/bio-data-edit/${user?.email}`, editBioData)
+        axiosSecure.patch(`/user/bio-data-edit/${user?.email}`, editBioData)
             .then(res => {
                 console.log(res.data);
                 if (res.data.matchedCount > 0) {
