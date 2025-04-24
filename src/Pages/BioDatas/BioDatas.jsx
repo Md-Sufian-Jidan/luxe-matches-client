@@ -2,46 +2,33 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../Hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosPublic from '../../Hooks/useAxiosPublic';
+import Pagination from '../../Components/Pagination/Pagination';
 
-const divisions = [
-    'Dhaka',
-    'Chattogram',
-    'Rangpur',
-    'Barisal',
-    'Khulna',
-    'Maymansign',
-    'Sylhet',
-];
-
-const mockBiodatas = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    type: i % 2 === 0 ? 'Male' : 'Female',
-    image: `https://i.pravatar.cc/150?img=${i + 10}`,
-    division: divisions[i % divisions.length],
-    age: 20 + (i % 15),
-    occupation: ['Student', 'Job', 'Housewife'][i % 3],
-}));
+const divisions = ['Dhaka', 'Chattogram', 'Rangpur', 'Barisal', 'Khulna', 'Maymansign', 'Sylhet',];
 
 const BioDatas = () => {
     const [genderFilter, setGenderFilter] = useState('');
     const [divisionFilter, setDivisionFilter] = useState('');
     const [ageRange, setAgeRange] = useState([18, 40]);
-    const navigate = useNavigate();
+    const [tempMinAge, setTempMinAge] = useState(ageRange[0]);
+    const [tempMaxAge, setTempMaxAge] = useState(ageRange[1]);
     const { user, loading } = useAuth();
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const limit = 10;
+    const axiosPublic = useAxiosPublic();
+    const navigate = useNavigate();
 
-    const filtered = mockBiodatas.filter((b) => {
-        return (
-            (!genderFilter || b.type === genderFilter) &&
-            (!divisionFilter || b.division === divisionFilter) &&
-            b.age >= ageRange[0] &&
-            b.age <= ageRange[1]
-        );
+    const { data: bioDatas = [], } = useQuery({
+        queryKey: ['bioDatas', page, limit, genderFilter, divisionFilter, ageRange],
+        queryFn: async () => {
+            const res = await axiosPublic.get(`/users-bio-data?page=${page}&limit=${limit}&gender=${genderFilter}&division=${divisionFilter}&minAge=${ageRange[0]}&maxAge=${ageRange[1]}`);
+            setTotal(res.data.count);
+            return res.data.users;
+        },
     });
-
-    const handleView = (id) => {
-        if (!user) navigate('/login');
-        else navigate(`/biodata/${id}`);
-    };
 
     if (loading) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>
 
@@ -85,53 +72,86 @@ const BioDatas = () => {
                     <div className="flex items-center gap-2 text-sm">
                         <input
                             type="number"
-                            value={ageRange[0]}
+                            value={tempMinAge}
                             min="18"
                             max="99"
-                            onChange={(e) => setAgeRange([+e.target.value, ageRange[1]])}
+                            onChange={(e) => setTempMinAge(e.target.value)}
+                            onBlur={() => setAgeRange([+tempMinAge || 18, ageRange[1]])}
                             className="w-1/2 border px-2 py-1 rounded"
                         />
                         <span>to</span>
                         <input
                             type="number"
-                            value={ageRange[1]}
+                            value={tempMaxAge}
                             min="18"
                             max="99"
-                            onChange={(e) => setAgeRange([ageRange[0], +e.target.value])}
+                            onChange={(e) => setTempMaxAge(e.target.value)}
+                            onBlur={() => setAgeRange([ageRange[0], +tempMaxAge || 99])}
                             className="w-1/2 border px-2 py-1 rounded"
                         />
                     </div>
                 </div>
             </div>
-
             {/* Main Biodata Cards */}
-            <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filtered.slice(0, 20).map((profile, i) => (
-                    <motion.div
-                        key={profile.id}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        className="bg-white p-4 rounded-lg border shadow hover:shadow-md transition text-center"
-                    >
-                        <img
-                            src={profile.image}
-                            alt="profile"
-                            className="w-24 h-24 mx-auto rounded-full object-cover mb-3"
-                        />
-                        <h4 className="text-lg font-semibold text-gray-800">Biodata #{profile.id}</h4>
-                        <p className="text-sm text-gray-600">{profile.type}</p>
-                        <p className="text-sm text-gray-600">{profile.division}</p>
-                        <p className="text-sm text-gray-600">{profile.age} yrs • {profile.occupation}</p>
-                        <button
-                            onClick={() => handleView(profile.id)}
-                            className="mt-3 bg-rose-600 text-white px-4 py-1 rounded-full text-sm hover:bg-rose-700"
-                        >
-                            View Profile
-                        </button>
-                    </motion.div>
-                ))}
+            <div className='md:col-span-3'>
+                <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {
+                        bioDatas.length === 0 ?
+                            <p className="text-center text-gray-500 col-span-3">No data available.</p> :
+                            bioDatas.map((profile, i) => (
+                                <motion.div
+                                    key={profile._id}
+                                    initial={{ opacity: 0, y: 25 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.06 }}
+                                    className="group relative rounded-xl overflow-hidden shadow hover:shadow-lg transition"
+                                >
+                                    {/* gradient outline */}
+                                    <span className="absolute inset-px rounded-[11px] bg-gradient-to-br from-rose-400/40 to-blue-400/40 opacity-0 group-hover:opacity-100 transition" />
+
+                                    <div className="relative z-10 bg-white rounded-[11px] p-6 flex flex-col items-center text-center">
+                                        <img
+                                            src={profile.photoURL}
+                                            alt="profile"
+                                            className="w-24 h-24 rounded-full object-cover ring-2 ring-rose-400/30 mb-4"
+                                        />
+
+                                        <h4 className="text-lg font-semibold text-gray-800">
+                                            Biodata #{profile.bioData.bioDataId}
+                                        </h4>
+                                        <p className="text-xs uppercase tracking-wide text-rose-500 font-medium">
+                                            {profile.bioData.bioDataType}
+                                        </p>
+
+                                        <div className="mt-2 text-sm text-gray-600 space-y-0.5">
+                                            <p>{profile.bioData.presentDivision}</p>
+                                            <p>
+                                                {profile.bioData.age} yrs • {profile.bioData.occupation}
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            onClick={() => handleView(profile._id)}
+                                            className="mt-5 inline-flex items-center gap-1 bg-rose-600 text-white px-4 py-1.5 rounded-full text-sm
+   hover:bg-rose-700 transition focus:outline-none focus:ring-2 focus:ring-rose-400"
+                                        >
+                                            View Profile
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))
+                    }
+
+                </div>
+                {/* ---------- PAGINATION ---------- */}
+                <Pagination
+                    page={page}
+                    limit={limit}
+                    total={total}
+                    onPageChange={setPage}
+                />
             </div>
+
         </div>
     );
 }

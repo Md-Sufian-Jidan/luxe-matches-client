@@ -6,15 +6,17 @@ import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet';
 
 const AdminSuccessStories = () => {
-    const [stories, setStories] = useState([]);
     const [selected, setSelected] = useState(null);
     const axiosSecure = useAxiosSecure();
 
-    const { data } = useQuery({
+    const { data: stories = [], refetch } = useQuery({
         queryKey: ['stories'],
         queryFn: async () => {
             const res = await axiosSecure.get('/admin/success-stories');
-            setStories(res.data);
+            const sortedStories = res?.data.sort(
+                (a, b) => new Date(b.marriageDate) - new Date(a.marriageDate)
+            );
+            return sortedStories;
         }
     })
 

@@ -6,7 +6,7 @@ import useAuth from '../Hooks/useAuth';
 import Swal from 'sweetalert2';
 
 const Dashboard = () => {
-    const [isAdmin, setIsAdmin] = useState(false); // replace with real check
+    const [isAdmin, setIsAdmin] = useState(true); // replace with real check
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
     const { logOut } = useAuth();

@@ -24,7 +24,7 @@ const GotMarried = () => {
             review: data.review,
             marriageDate: data.marriageDate
         };
-        await axiosSecure.post('/user/success-stories', { marriageDetails })
+        await axiosSecure.post('/user/success-stories', { ...marriageDetails })
             .then(res => {
                 Swal.fire({
                     title: "Success!",
