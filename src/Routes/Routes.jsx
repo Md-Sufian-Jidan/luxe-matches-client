@@ -12,6 +12,8 @@ import Dashboard from "../Layouts/Dashboard";
 import EditBioData from "../Pages/Dashboard/EditBioData/EditBioData";
 import ViewBioData from "../Pages/Dashboard/ViewBioData/ViewBioData";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard/AdminDashboard";
+import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
+import ApprovePremium from "../Pages/Dashboard/ApprovePremium/ApprovePremium";
 
 export const router = createBrowserRouter([
     {
@@ -52,9 +54,18 @@ export const router = createBrowserRouter([
                 path: '/dashboard/view-bio-data',
                 element: <ViewBioData />
             },
+            // admin routes
             {
                 path: '/dashboard/admin',
                 element: <AdminDashboard />
+            },
+            {
+                path: '/dashboard/manage-users',
+                element: <ManageUsers />
+            },
+            {
+                path: '/dashboard/approve-premium',
+                element: <ApprovePremium />
             },
         ]
     }
