@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 // import debounce from 'lodash.debounce';
@@ -16,7 +15,7 @@ const ManageUsers = () => {
     const fetchUsers = useCallback(
         async (q = '', p = 1) => {
             setLoading(true);
-            const { data } = await axiosSecure.get('/api/admin/users', {
+            const { data } = await axiosSecure.get('/admin/manage-users', {
                 params: { q, page: p, limit: perPage },
             });
             setUsers(data);
@@ -96,7 +95,7 @@ const ManageUsers = () => {
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
                                     >
-                                        <td className="px-4 py-2">{u.username}</td>
+                                        <td className="px-4 py-2">{u.name}</td>
                                         <td className="px-4 py-2">{u.email}</td>
                                         <td className="px-4 py-2">
                                             {u.isAdmin ? '✔️' : '—'}

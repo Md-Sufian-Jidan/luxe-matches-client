@@ -11,10 +11,6 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const { logOut } = useAuth();
 
-    // useEffect(() => {
-    //     setIsAdmin(localStorage.getItem('role') === 'admin');
-    // }, []);
-
     const handleLogout = () => {
         logOut()
             .then(res => {

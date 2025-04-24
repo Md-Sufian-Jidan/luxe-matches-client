@@ -19,7 +19,6 @@ const ApprovePremium = () => {
             setLoading(true);
             const res = await axiosSecure.get('/premium-requests');
             const premiums = res.data;
-            console.log(premiums);
             const r = premiums.filter((premium) => premium.isPremium === 'false');
             setLoading(false);
             return r;

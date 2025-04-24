@@ -20,10 +20,11 @@ const ViewBioData = () => {
         enabled: !!user?.email,
         queryFn: async () => {
             const res = await axiosSecure.get(`/get-bio-data/${user?.email}`);
-            return res.data;
+            return res.data?.result;
         },
     });
 
+    console.log(bioData);
     const handleMakePremium = async () => {
         setSending(true);
         axiosSecure.post(`/make-bio-data-premium-request`, { bioData })

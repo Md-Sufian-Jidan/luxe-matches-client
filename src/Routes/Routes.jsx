@@ -48,11 +48,11 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/dashboard/edit-bio-data',
-                element: <EditBioData />
+                element: <PrivateRoute><EditBioData /></PrivateRoute>
             },
             {
                 path: '/dashboard/view-bio-data',
-                element: <ViewBioData />
+                element: <PrivateRoute><ViewBioData /></PrivateRoute>
             },
             // admin routes
             {

@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { motion } from 'framer-motion';
+import { motion, resolveMotionValue } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
@@ -14,6 +14,7 @@ const EditBioData = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [count, setCount] = useState();
     const {
         register,
         handleSubmit,
@@ -48,14 +49,15 @@ const EditBioData = () => {
         enabled: !!user?.email,
         queryFn: async () => {
             const res = await axiosSecure.get(`/get-bio-data/${user?.email}`);
-            return res.data;
+            setCount(res.data?.count);
+            return res.data?.result;
         },
     });
 
     const onSubmit = async (data) => {
         setIsSubmitting(true);
-        const bioData = {
-            bioDataId: bioData.bioData.bioDataId + 1,
+        const editBioData = {
+            bioDataId: bioData?.bioData?.bioDataId || count + 1,
             bioDataType: data.bioDataType,
             name: data.name,
             image: data.image,
@@ -75,7 +77,7 @@ const EditBioData = () => {
             contactEmail: data.contactEmail,
             mobile: data.mobile,
         };
-        axiosSecure.patch(`/bio-data-edit/${user?.email}`, bioData)
+        axiosSecure.patch(`/bio-data-edit/${user?.email}`, editBioData)
             .then(res => {
                 console.log(res.data);
                 if (res.data.matchedCount > 0) {
@@ -142,7 +144,7 @@ const EditBioData = () => {
                     <label className="block text-sm font-medium mb-1">Profile Image URL *</label>
                     <input
                         type="url"
-                        defaultValue={bioData.bioData.image}
+                        defaultValue={bioData?.bioData?.image}
                         {...register('image', { required: 'Image link required' })}
                         className="w-full border rounded px-3 py-2"
                     />
@@ -155,7 +157,7 @@ const EditBioData = () => {
                         type="date"
                         {...register('dob', { required: 'Select DOB' })}
                         className="w-full border rounded px-3 py-2"
-                        defaultValue={bioData.bioData.dob}
+                        defaultValue={bioData?.bioData?.dob}
                     />
                     {errors.dob && <p className="text-red-500 text-xs">{errors.dob.message}</p>}
                 </div>
@@ -164,7 +166,7 @@ const EditBioData = () => {
                     <label className="block text-sm font-medium mb-1">Height *</label>
                     <select
                         {...register('height', { required: 'Height required' })}
-                        defaultValue={bioData.bioData.height}
+                        defaultValue={bioData?.bioData?.height}
                         className="w-full border rounded px-3 py-2"
                     >
                         <option value="">Choose...</option>
@@ -178,7 +180,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Weight *</label>
                     <select
-                        defaultValue={bioData.bioData.weight}
+                        defaultValue={bioData?.bioData?.weight}
                         {...register('weight', { required: 'Weight required' })}
                         className="w-full border rounded px-3 py-2"
                     >
@@ -193,7 +195,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Age *</label>
                     <input
-                        defaultValue={bioData.bioData.age}
+                        defaultValue={bioData?.bioData?.age}
                         type="number"
                         {...register('age', { required: 'Age required', min: 18, max: 99 })}
                         className="w-full border rounded px-3 py-2"
@@ -204,7 +206,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Occupation *</label>
                     <select
-                        defaultValue={bioData.bioData.occupation}
+                        defaultValue={bioData?.bioData?.occupation}
                         {...register('occupation', { required: 'Occupation required' })}
                         className="w-full border rounded px-3 py-2"
                     >
@@ -219,7 +221,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Race *</label>
                     <select
-                        defaultValue={bioData.bioData.race}
+                        defaultValue={bioData?.bioData?.race}
                         {...register('race', { required: 'Race required' })}
                         className="w-full border rounded px-3 py-2"
                     >
@@ -234,7 +236,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Father’s Name *</label>
                     <input
-                        defaultValue={bioData.bioData.fathersName}
+                        defaultValue={bioData?.bioData?.fathersName}
                         type="text"
                         {...register('fathersName', { required: true })}
                         className="w-full border rounded px-3 py-2"
@@ -243,7 +245,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Mother’s Name *</label>
                     <input
-                        defaultValue={bioData.bioData.mothersName}
+                        defaultValue={bioData?.bioData?.mothersName}
                         type="text"
                         {...register('mothersName', { required: true })}
                         className="w-full border rounded px-3 py-2"
@@ -253,7 +255,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Permanent Division *</label>
                     <select
-                        defaultValue={bioData.bioData.permanentDivision}
+                        defaultValue={bioData?.bioData?.permanentDivision}
                         {...register('permanentDivision', { required: true })}
                         className="w-full border rounded px-3 py-2"
                     >
@@ -266,7 +268,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Present Division *</label>
                     <select
-                        defaultValue={bioData.bioData.presentDivision}
+                        defaultValue={bioData?.bioData?.presentDivision}
                         {...register('presentDivision', { required: true })}
                         className="w-full border rounded px-3 py-2"
                     >
@@ -280,7 +282,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Expected Partner Age *</label>
                     <input
-                        defaultValue={bioData.bioData.expectedPartnerAge}
+                        defaultValue={bioData?.bioData?.expectedPartnerAge}
                         type="text"
                         {...register('expectedPartnerAge', { required: true })}
                         placeholder="e.g. 25‑32"
@@ -290,7 +292,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Expected Partner Height *</label>
                     <select
-                        defaultValue={bioData.bioData.expectedPartnerHeight}
+                        defaultValue={bioData?.bioData?.expectedPartnerHeight}
                         {...register('expectedPartnerHeight', { required: true })}
                         className="w-full border rounded px-3 py-2"
                     >
@@ -303,7 +305,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Expected Partner Weight *</label>
                     <select
-                        defaultValue={bioData.bioData.expectedPartnerWeight}
+                        defaultValue={bioData?.bioData?.expectedPartnerWeight}
                         {...register('expectedPartnerWeight', { required: true })}
                         className="w-full border rounded px-3 py-2"
                     >
@@ -327,7 +329,7 @@ const EditBioData = () => {
                 <div>
                     <label className="block text-sm font-medium mb-1">Mobile Number *</label>
                     <input
-                        defaultValue={bioData.bioData.mobile}
+                        defaultValue={bioData?.bioData?.mobile}
                         type="tel"
                         {...register('mobile', { required: true })}
                         className="w-full border rounded px-3 py-2"
