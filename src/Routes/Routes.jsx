@@ -14,6 +14,8 @@ import ViewBioData from "../Pages/Dashboard/ViewBioData/ViewBioData";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard/AdminDashboard";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 import ApprovePremium from "../Pages/Dashboard/ApprovePremium/ApprovePremium";
+import AdminSuccessStories from "../Pages/Dashboard/AdminSuccessStories/AdminSuccessStories";
+import GotMarried from "../Pages/Dashboard/GotMarried/GotMarried";
 
 export const router = createBrowserRouter([
     {
@@ -54,6 +56,10 @@ export const router = createBrowserRouter([
                 path: '/dashboard/view-bio-data',
                 element: <PrivateRoute><ViewBioData /></PrivateRoute>
             },
+            {
+                path: '/dashboard/married',
+                element: <PrivateRoute><GotMarried /></PrivateRoute>
+            },
             // admin routes
             {
                 path: '/dashboard/admin',
@@ -66,6 +72,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/approve-premium',
                 element: <ApprovePremium />
+            },
+            {
+                path: '/dashboard/success-stories',
+                element: <AdminSuccessStories />
             },
         ]
     }

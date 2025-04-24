@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-// import debounce from 'lodash.debounce';
+import Swal from 'sweetalert2';
 
 const ManageUsers = () => {
     const [query, setQuery] = useState('');
@@ -10,8 +10,6 @@ const ManageUsers = () => {
     const [page, setPage] = useState(1);
     const perPage = 10;
     const axiosSecure = useAxiosSecure();
-
-    /** ① fetch users (server‑side search + pagination) */
     const fetchUsers = useCallback(
         async (q = '', p = 1) => {
             setLoading(true);
@@ -20,32 +18,40 @@ const ManageUsers = () => {
             });
             setUsers(data);
             setLoading(false);
-        },
-        []
-    );
+        }, []);
 
-    /** debounce search input */
-    // const debouncedFetch = useCallback(debounce(fetchUsers, 400), [fetchUsers]);
-
-    /** mount + page change */
     useEffect(() => { fetchUsers(query, page); }, [fetchUsers, query, page]);
-
-    /** search handler */
     const onSearch = (e) => {
         const val = e.target.value;
         setQuery(val);
-        // debouncedFetch(val, 1);
         setPage(1);
     };
-
-    /** optimistic role toggles */
     const toggleRole = async (id, field) => {
-        setUsers((prev) =>
-            prev.map((u) =>
-                u._id === id ? { ...u, [field]: !u[field] } : u
-            )
-        );
-        await axiosSecure.patch(`/api/admin/users/${id}`, { [field]: true });
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, do it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setUsers((prev) =>
+                    prev.map((u) =>
+                        u._id === id ? { ...u, [field]: !u[field] } : u
+                    )
+                );
+                await axiosSecure.patch(`/make-admin/make-premium/${id}`, { [field]: true })
+                    .then(res => {
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Your user has been Updated.",
+                            icon: "success"
+                        });
+                    });
+            }
+        });
     };
 
     return (
@@ -60,7 +66,6 @@ const ManageUsers = () => {
                     className="w-64 border rounded px-3 py-1.5 text-sm"
                 />
             </div>
-
             {/* Table */}
             <div className="overflow-x-auto bg-white rounded-xl shadow">
                 <table className="min-w-full text-sm whitespace-nowrap">
@@ -128,7 +133,6 @@ const ManageUsers = () => {
                     </tbody>
                 </table>
             </div>
-
             {/* Pagination */}
             <div className="flex justify-center gap-2">
                 <button
