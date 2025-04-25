@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, Menu, X, LayoutDashboard, User, Star, Users, BadgeCheck, Mail } from 'lucide-react';
 import useAuth from '../Hooks/useAuth';
 import Swal from 'sweetalert2';
+import useCheck from '../Hooks/useCheck.jsx'
 
 const Dashboard = () => {
-    const [isAdmin, setIsAdmin] = useState(true); // replace with real check
+    const { isAdmin } = useCheck();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
     const { logOut } = useAuth();
