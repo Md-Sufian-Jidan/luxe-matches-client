@@ -16,6 +16,8 @@ import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 import ApprovePremium from "../Pages/Dashboard/ApprovePremium/ApprovePremium";
 import AdminSuccessStories from "../Pages/Dashboard/AdminSuccessStories/AdminSuccessStories";
 import GotMarried from "../Pages/Dashboard/GotMarried/GotMarried";
+import ApprovedContactRequest from "../Pages/Dashboard/ApprovedContactRequest/ApprovedContactRequest";
+import MyFavourites from "../Pages/Dashboard/MyFavourites/MyFavourites";
 
 export const router = createBrowserRouter([
     {
@@ -57,6 +59,10 @@ export const router = createBrowserRouter([
                 element: <PrivateRoute><ViewBioData /></PrivateRoute>
             },
             {
+                path: '/dashboard/favourites',
+                element: <PrivateRoute><MyFavourites /></PrivateRoute>
+            },
+            {
                 path: '/dashboard/married',
                 element: <PrivateRoute><GotMarried /></PrivateRoute>
             },
@@ -76,6 +82,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/success-stories',
                 element: <AdminSuccessStories />
+            },
+            {
+                path: '/dashboard/approve-contacts',
+                element: <ApprovedContactRequest />
             },
         ]
     }

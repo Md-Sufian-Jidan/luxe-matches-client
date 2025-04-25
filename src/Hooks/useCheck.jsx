@@ -15,7 +15,7 @@ const useRole = () => {
         },
     });
 
-    return { isAdmin: data?.isAdmin, isPremium: data?.isPremium, isLoading, isError };
+    return { isAdmin: false, isPremium: data?.isPremium, isLoading, isError };
 };
 
 export default useRole;

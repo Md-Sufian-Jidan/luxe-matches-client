@@ -3,30 +3,53 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import useAuth from '../../Hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
 
 const BioDataDetails = () => {
     const { biodataId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    // const [biodata, setBiodata] = useState(null);
     const [similar, setSimilar] = useState([]);
     const isPremium = false;
     const axiosSecure = useAxiosSecure();
     const { id } = useParams();
+    const queryClient = useQueryClient();
 
-    const { data: bioData } = useQuery({
+    const { data: bioData, refetch } = useQuery({
         queryKey: ['bioData', id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/bioData-details/${id}`);
             setSimilar(res.data.similar);
             return res.data.person;
         }
-    })
-    const handleAddToFavourites = () => {
-        toast.success('Added to favourites!');
-        // Add logic to push to DB
+    });
+
+    const favourite = useMutation({
+        mutationFn: async (bio) => {
+            const favouriteBioData = {
+                bio,
+                requestBy: {
+                    email: user?.email,
+                    name: user?.displayName,
+                },
+            };
+            await axiosSecure.post(`/user/add-favourite/${bio?.email}`, favouriteBioData);
+        },
+        onSuccess: () => queryClient.invalidateQueries(["bioData"]),
+    });
+
+    const handleAddToFavourites = (bio) => {
+        favourite.mutate(bio, {
+            onSuccess: () => {
+                Swal.fire({
+                    title: 'Added!',
+                    text: `${bio?.name} has been added to Favourite`,
+                    icon: 'success',
+                });
+            },
+        });
     };
 
     const handleContactRequest = () => {
@@ -72,7 +95,7 @@ const BioDataDetails = () => {
                         {/* Actions */}
                         <div className="flex gap-3 mt-4">
                             <button
-                                onClick={handleAddToFavourites}
+                                onClick={() => handleAddToFavourites(bioData)}
                                 className="bg-rose-500 text-white px-4 py-1 rounded hover:bg-rose-600"
                             >
                                 Add to Favourites
