@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 // import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { Helmet } from 'react-helmet';
 const data = {
     total: 400,
     male: 220,
@@ -41,56 +42,61 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="space-y-8"
-        >
-            {/* KPI cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {kpi.map((card, i) => (
-                    <motion.div
-                        key={card.label}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="bg-white rounded-xl shadow p-6 flex items-center gap-4"
-                    >
-                        <div className={`w-3 h-3 rounded-full ${card.color}`} />
-                        <div>
-                            <p className="text-sm text-gray-500">{card.label}</p>
-                            <p className="text-xl font-bold text-gray-800">{card.value}</p>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
-
-            {/* Pie chart */}
-            <div className="bg-white rounded-xl shadow p-6">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Biodata Distribution</h3>
-                <div className="w-full h-64">
-                    <ResponsiveContainer>
-                        <PieChart>
-                            <Pie
-                                data={pieData}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius="50%"
-                                outerRadius="80%"
-                                paddingAngle={4}
-                                label
-                            >
-                                {pieData.map((d) => (
-                                    <Cell key={d.name} fill={d.color} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
+        <>
+            <Helmet>
+                <title>LuxeMatches | Admin Dashboard</title>
+            </Helmet>
+            <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="space-y-8"
+            >
+                {/* KPI cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {kpi.map((card, i) => (
+                        <motion.div
+                            key={card.label}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="bg-white rounded-xl shadow p-6 flex items-center gap-4"
+                        >
+                            <div className={`w-3 h-3 rounded-full ${card.color}`} />
+                            <div>
+                                <p className="text-sm text-gray-500">{card.label}</p>
+                                <p className="text-xl font-bold text-gray-800">{card.value}</p>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
-            </div>
-        </motion.div>
+
+                {/* Pie chart */}
+                <div className="bg-white rounded-xl shadow p-6">
+                    <h3 className="text-lg font-semibold text-gray-700 mb-4">Biodata Distribution</h3>
+                    <div className="w-full h-64">
+                        <ResponsiveContainer>
+                            <PieChart>
+                                <Pie
+                                    data={pieData}
+                                    dataKey="value"
+                                    nameKey="name"
+                                    innerRadius="50%"
+                                    outerRadius="80%"
+                                    paddingAngle={4}
+                                    label
+                                >
+                                    {pieData.map((d) => (
+                                        <Cell key={d.name} fill={d.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </motion.div>
+        </>
     );
 }
 

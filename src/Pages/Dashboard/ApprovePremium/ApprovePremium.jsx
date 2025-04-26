@@ -6,6 +6,7 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import useAuth from '../../../Hooks/useAuth';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
+import { Helmet } from 'react-helmet';
 
 const ApprovePremium = () => {
     const [loading, setLoading] = useState(false);
@@ -49,62 +50,67 @@ const ApprovePremium = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-xl font-bold text-gray-800">Premium Approval Requests</h1>
+        <>
+            <Helmet>
+                <title>LuxeMatches | Approve Premium</title>
+            </Helmet>
+            <div className="space-y-6">
+                <h1 className="text-xl font-bold text-gray-800">Premium Approval Requests</h1>
 
-            <div className="overflow-x-auto bg-white rounded-xl shadow">
-                <table className="min-w-full text-sm">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            {['Name', 'Email', 'Biodata ID', 'Action'].map((h) => (
-                                <th key={h} className="px-4 py-2 text-left font-medium text-gray-600">
-                                    {h}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
+                <div className="overflow-x-auto bg-white rounded-xl shadow">
+                    <table className="min-w-full text-sm">
+                        <thead className="bg-gray-100">
+                            <tr>
+                                {['Name', 'Email', 'Biodata ID', 'Action'].map((h) => (
+                                    <th key={h} className="px-4 py-2 text-left font-medium text-gray-600">
+                                        {h}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        <AnimatePresence>
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={4} className="py-6 text-center text-gray-500">
-                                        Loading…
-                                    </td>
-                                </tr>
-                            ) : requests.length === 0 ? (
-                                <tr>
-                                    <td colSpan={4} className="py-6 text-center text-gray-500">
-                                        No pending requests
-                                    </td>
-                                </tr>
-                            ) : (
-                                requests.map((r) => (
-                                    <motion.tr
-                                        key={r._id}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                    >
-                                        <td className="px-4 py-2">{r.name}</td>
-                                        <td className="px-4 py-2">{r.email}</td>
-                                        <td className="px-4 py-2">#{r.bioData?.bioDataId}</td>
-                                        <td className="px-4 py-2">
-                                            <button
-                                                onClick={() => approve(r)}
-                                                className="px-4 py-1 bg-emerald-600 text-white rounded text-xs hover:bg-emerald-700"
-                                            >
-                                                Make Premium
-                                            </button>
+                        <tbody>
+                            <AnimatePresence>
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={4} className="py-6 text-center text-gray-500">
+                                            Loading…
                                         </td>
-                                    </motion.tr>
-                                ))
-                            )}
-                        </AnimatePresence>
-                    </tbody>
-                </table>
+                                    </tr>
+                                ) : requests.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={4} className="py-6 text-center text-gray-500">
+                                            No pending requests
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    requests.map((r) => (
+                                        <motion.tr
+                                            key={r._id}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                        >
+                                            <td className="px-4 py-2">{r.name}</td>
+                                            <td className="px-4 py-2">{r.email}</td>
+                                            <td className="px-4 py-2">#{r.bioData?.bioDataId}</td>
+                                            <td className="px-4 py-2">
+                                                <button
+                                                    onClick={() => approve(r)}
+                                                    className="px-4 py-1 bg-emerald-600 text-white rounded text-xs hover:bg-emerald-700"
+                                                >
+                                                    Make Premium
+                                                </button>
+                                            </td>
+                                        </motion.tr>
+                                    ))
+                                )}
+                            </AnimatePresence>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
@@ -16,6 +16,7 @@ const Login = () => {
     } = useForm();
     const [showPassword, setShowPassword] = useState(false);
     const { signIn, googleSignIn } = useAuth();
+    const location = useLocation();
     const navigate = useNavigate();
     const axiosPublic = useAxiosPublic();
 
@@ -58,7 +59,7 @@ const Login = () => {
                             text: "User Login Successfully",
                             icon: "success"
                         });
-                        navigate('/');
+                        navigate(location?.state ? location.pathname : '/');
                     }
                     );
             })

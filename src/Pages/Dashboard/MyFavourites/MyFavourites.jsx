@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Swal from 'sweetalert2';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { Helmet } from 'react-helmet';
 
 const MyFavourites = () => {
   const queryClient = useQueryClient();
@@ -46,63 +47,68 @@ const MyFavourites = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-800">My Favourites</h1>
+    <>
+      <Helmet>
+        <title>LuxeMatches | Favourites</title>
+      </Helmet>
+      <div className="space-y-6">
+        <h1 className="text-xl font-bold text-gray-800">My Favourites</h1>
 
-      <div className="overflow-x-auto bg-white rounded-xl shadow">
-        <table className="min-w-full text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Biodata ID</th>
-              <th className="px-4 py-2 text-left">Permanent Address</th>
-              <th className="px-4 py-2 text-left">Occupation</th>
-              <th className="px-4 py-2 text-left">Action</th>
-            </tr>
-          </thead>
+        <div className="overflow-x-auto bg-white rounded-xl shadow">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 text-left">Name</th>
+                <th className="px-4 py-2 text-left">Biodata ID</th>
+                <th className="px-4 py-2 text-left">Permanent Address</th>
+                <th className="px-4 py-2 text-left">Occupation</th>
+                <th className="px-4 py-2 text-left">Action</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            <AnimatePresence>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={5} className="py-6 text-center text-gray-500">
-                    Loading…
-                  </td>
-                </tr>
-              ) : favourites.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="py-6 text-center text-gray-500">
-                    No favourites added yet.
-                  </td>
-                </tr>
-              ) : (
-                favourites.map((f) => (
-                  <motion.tr
-                    key={f._id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <td className="px-4 py-2">{f?.bio.name}</td>
-                    <td className="px-4 py-2">#{f.bio?.bioData.bioDataId}</td>
-                    <td className="px-4 py-2">{f.bio.bioData?.permanentDivision}</td>
-                    <td className="px-4 py-2">{f.bio.bioData?.occupation}</td>
-                    <td className="px-4 py-2">
-                      <button
-                        onClick={() => handleDelete(f._id)}
-                        className="text-xs bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
+            <tbody>
+              <AnimatePresence>
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center text-gray-500">
+                      Loading…
                     </td>
-                  </motion.tr>
-                ))
-              )}
-            </AnimatePresence>
-          </tbody>
-        </table>
+                  </tr>
+                ) : favourites.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center text-gray-500">
+                      No favourites added yet.
+                    </td>
+                  </tr>
+                ) : (
+                  favourites.map((f) => (
+                    <motion.tr
+                      key={f._id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <td className="px-4 py-2">{f?.bio.name}</td>
+                      <td className="px-4 py-2">#{f.bio?.bioData.bioDataId}</td>
+                      <td className="px-4 py-2">{f.bio.bioData?.permanentDivision}</td>
+                      <td className="px-4 py-2">{f.bio.bioData?.occupation}</td>
+                      <td className="px-4 py-2">
+                        <button
+                          onClick={() => handleDelete(f._id)}
+                          className="text-xs bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))
+                )}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

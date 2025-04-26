@@ -6,6 +6,7 @@ import useAuth from '../../../Hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
+import { Helmet } from 'react-helmet';
 
 const ViewBioData = () => {
     // const [bioData, setBioData] = useState(null);
@@ -42,6 +43,9 @@ const ViewBioData = () => {
     if (!bioData) return <p className="text-center mt-10">Loading…</p>;
     return (
         <>
+            <Helmet>
+                <title>LuxeMatches | View Biodata</title>
+            </Helmet>
             <motion.div
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}

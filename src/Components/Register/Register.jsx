@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useAuth from '../../Hooks/useAuth';
 import clsx from 'clsx';
@@ -14,12 +14,13 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${VITE_IMAGE_HOSTI
 
 const Register = () => {
     const [imagePreview, setImagePreview] = useState(null);
-    const { createUser, updateUserProfile, googleSignIn } = useAuth();
+    const { createUser, updateUserProfile } = useAuth();
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [strength, setStrength] = useState('');
     const [color, setColor] = useState('');
     const axiosPublic = useAxiosPublic();
     const navigate = useNavigate();
+    const location = useLocation()
 
     const evaluateStrength = (value) => {
         let score = 0;
@@ -92,7 +93,7 @@ const Register = () => {
                                             showConfirmButton: false,
                                             timer: 1500
                                         });
-                                        navigate('/');
+                                        navigate(location?.state ? location.pathname : '/');
                                     }
                                 })
                         })

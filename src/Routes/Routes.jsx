@@ -20,6 +20,7 @@ import Payment from "../Components/Payment/Payment";
 import MyContactRequest from "../Pages/Dashboard/MyContactRequest/MyContactRequest";
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import Contact from "../Pages/Contact/Contact";
+import AdminRoute from "../Routes/AdminRoute";
 
 export const router = createBrowserRouter([
     {
@@ -35,16 +36,16 @@ export const router = createBrowserRouter([
                 element: <PrivateRoute> <BioDatas /></PrivateRoute>
             },
             {
+                path: '/user/view-bioData/:id',
+                element: <PrivateRoute> <BioDataDetails /></PrivateRoute>
+            },
+            {
                 path: '/about',
                 element: <AboutUs />
             },
             {
                 path: '/contact',
                 element: <Contact />
-            },
-            {
-                path: '/user/view-bioData/:id',
-                element: <PrivateRoute> <BioDataDetails /></PrivateRoute>
             },
             {
                 path: '/register',
@@ -87,23 +88,23 @@ export const router = createBrowserRouter([
             // admin routes
             {
                 path: '/dashboard/admin',
-                element: <AdminDashboard />
+                element: <AdminRoute><AdminDashboard /></AdminRoute>
             },
             {
                 path: '/dashboard/manage-users',
-                element: <ManageUsers />
+                element: <AdminRoute><ManageUsers /></AdminRoute>
             },
             {
                 path: '/dashboard/approve-premium',
-                element: <ApprovePremium />
-            },
-            {
-                path: '/dashboard/success-stories',
-                element: <AdminSuccessStories />
+                element: <AdminRoute><ApprovePremium /></AdminRoute>
             },
             {
                 path: '/dashboard/approve-contacts',
-                element: <ApprovedContactRequest />
+                element: <AdminRoute><ApprovedContactRequest /></AdminRoute>
+            },
+            {
+                path: '/dashboard/success-stories',
+                element: <AdminRoute><AdminSuccessStories /></AdminRoute>
             },
         ]
     },
