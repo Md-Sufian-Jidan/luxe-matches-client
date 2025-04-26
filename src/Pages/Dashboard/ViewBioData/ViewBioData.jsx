@@ -15,7 +15,7 @@ const ViewBioData = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data: bioData, isLoading } = useQuery({
+    const { data: bioData, } = useQuery({
         queryKey: ['bioData'],
         enabled: !!user?.email,
         queryFn: async () => {
@@ -24,7 +24,6 @@ const ViewBioData = () => {
         },
     });
 
-    console.log(bioData);
     const handleMakePremium = async () => {
         setSending(true);
         axiosSecure.post(`/user/make-bio-data-premium-request`, { bioData })
@@ -41,11 +40,8 @@ const ViewBioData = () => {
     };
 
     if (!bioData) return <p className="text-center mt-10">Loading…</p>;
-
-    /** ---------------- JSX ---------------- */
     return (
         <>
-            {/* ①  Main Card */}
             <motion.div
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -104,8 +100,7 @@ const ViewBioData = () => {
                     </p>
                 )}
             </motion.div>
-
-            {/* ②  Confirm‑Modal */}
+            {/* Confirm‑Modal */}
             <AnimatePresence>
                 {modalOpen && (
                     <>

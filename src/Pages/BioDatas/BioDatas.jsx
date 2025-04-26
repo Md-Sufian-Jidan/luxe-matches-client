@@ -21,7 +21,7 @@ const BioDatas = () => {
     const axiosPublic = useAxiosPublic();
     const navigate = useNavigate();
 
-    const { data: bioDatas = [], } = useQuery({
+    const { data: bioDatas = [], isLoading } = useQuery({
         queryKey: ['bioDatas', page, limit, genderFilter, divisionFilter, ageRange],
         queryFn: async () => {
             const res = await axiosPublic.get(`/users-bio-data?page=${page}&limit=${limit}&gender=${genderFilter}&division=${divisionFilter}&minAge=${ageRange[0]}&maxAge=${ageRange[1]}`);
@@ -98,48 +98,49 @@ const BioDatas = () => {
                     {
                         bioDatas.length === 0 ?
                             <p className="text-center text-gray-500 col-span-3">No data available.</p> :
-                            bioDatas.map((profile, i) => (
-                                <motion.div
-                                    key={profile._id}
-                                    initial={{ opacity: 0, y: 25 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.06 }}
-                                    className="group relative rounded-xl overflow-hidden shadow hover:shadow-lg transition"
-                                >
-                                    {/* gradient outline */}
-                                    <span className="absolute inset-px rounded-[11px] bg-gradient-to-br from-rose-400/40 to-blue-400/40 opacity-0 group-hover:opacity-100 transition" />
+                            isLoading ? <p className="text-center text-gray-500 col-span-3">Loading...</p> :
+                                bioDatas.map((profile, i) => (
+                                    <motion.div
+                                        key={profile._id}
+                                        initial={{ opacity: 0, y: 25 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.06 }}
+                                        className="group relative rounded-xl overflow-hidden shadow hover:shadow-lg transition"
+                                    >
+                                        {/* gradient outline */}
+                                        <span className="absolute inset-px rounded-[11px] bg-gradient-to-br from-rose-400/40 to-blue-400/40 opacity-0 group-hover:opacity-100 transition" />
 
-                                    <div className="relative z-10 bg-white rounded-[11px] p-6 flex flex-col items-center text-center">
-                                        <img
-                                            src={profile.photoURL}
-                                            alt="profile"
-                                            className="w-24 h-24 rounded-full object-cover ring-2 ring-rose-400/30 mb-4"
-                                        />
+                                        <div className="relative z-10 bg-white rounded-[11px] p-6 flex flex-col items-center text-center">
+                                            <img
+                                                src={profile.photoURL}
+                                                alt="profile"
+                                                className="w-24 h-24 rounded-full object-cover ring-2 ring-rose-400/30 mb-4"
+                                            />
 
-                                        <h4 className="text-lg font-semibold text-gray-800">
-                                            Biodata #{profile.bioData.bioDataId}
-                                        </h4>
-                                        <p className="text-xs uppercase tracking-wide text-rose-500 font-medium">
-                                            {profile.bioData.bioDataType}
-                                        </p>
-
-                                        <div className="mt-2 text-sm text-gray-600 space-y-0.5">
-                                            <p>{profile.bioData.presentDivision}</p>
-                                            <p>
-                                                {profile.bioData.age} yrs • {profile.bioData.occupation}
+                                            <h4 className="text-lg font-semibold text-gray-800">
+                                                Biodata #{profile.bioData.bioDataId}
+                                            </h4>
+                                            <p className="text-xs uppercase tracking-wide text-rose-500 font-medium">
+                                                {profile.bioData.bioDataType}
                                             </p>
-                                        </div>
 
-                                        <Link
-                                            to={`/user/view-bioData/${profile?._id}`}
-                                            className="mt-5 inline-flex items-center gap-1 bg-rose-600 text-white px-4 py-1.5 rounded-full text-sm
+                                            <div className="mt-2 text-sm text-gray-600 space-y-0.5">
+                                                <p>{profile.bioData.presentDivision}</p>
+                                                <p>
+                                                    {profile.bioData.age} yrs • {profile.bioData.occupation}
+                                                </p>
+                                            </div>
+
+                                            <Link
+                                                to={`/user/view-bioData/${profile?._id}`}
+                                                className="mt-5 inline-flex items-center gap-1 bg-rose-600 text-white px-4 py-1.5 rounded-full text-sm
    hover:bg-rose-700 transition focus:outline-none focus:ring-2 focus:ring-rose-400"
-                                        >
-                                            View Profile
-                                        </Link>
-                                    </div>
-                                </motion.div>
-                            ))
+                                            >
+                                                View Profile
+                                            </Link>
+                                        </div>
+                                    </motion.div>
+                                ))
                     }
 
                 </div>

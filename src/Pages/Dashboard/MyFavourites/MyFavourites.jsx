@@ -17,12 +17,10 @@ const MyFavourites = () => {
       return res.data;
     }
   });
-  console.log(favourites);
 
-  // DELETE: remove from favourites
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      await axios.delete(`/user/delete-favourites/${id}`);
+      await axiosSecure.delete(`/user/delete-favourites/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['favourites']);

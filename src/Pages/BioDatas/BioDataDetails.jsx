@@ -1,23 +1,23 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
 import useAuth from '../../Hooks/useAuth';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
+import useCheck from '../../Hooks/useCheck'
 
 const BioDataDetails = () => {
     const { biodataId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
     const [similar, setSimilar] = useState([]);
-    const isPremium = false;
+    const { isPremium } = useCheck()
     const axiosSecure = useAxiosSecure();
     const { id } = useParams();
     const queryClient = useQueryClient();
 
-    const { data: bioData, refetch } = useQuery({
+    const { data: bioData, } = useQuery({
         queryKey: ['bioData', id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/bioData-details/${id}`);
@@ -53,7 +53,7 @@ const BioDataDetails = () => {
     };
 
     const handleContactRequest = () => {
-        navigate(`/checkout/${biodataId}`);
+        navigate(`/checkout/${bioData?._id}`);
     };
 
     if (!bioData) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>;
@@ -84,7 +84,7 @@ const BioDataDetails = () => {
                         {isPremium ? (
                             <div className="mt-3 text-rose-600">
                                 <p>Email: {bioData?.bioData.contactEmail}</p>
-                                <p>Phone: {bioData?.bioData.phone}</p>
+                                <p>Phone: {bioData?.bioData.mobile}</p>
                             </div>
                         ) : (
                             <p className="mt-2 text-sm text-gray-400 italic">
@@ -102,7 +102,7 @@ const BioDataDetails = () => {
                             </button>
                             {!isPremium && (
                                 <button
-                                    onClick={handleContactRequest}
+                                    onClick={() => handleContactRequest(bioData)}
                                     className="bg-emerald-600 text-white px-4 py-1 rounded hover:bg-emerald-700"
                                 >
                                     Request Contact Info

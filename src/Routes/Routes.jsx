@@ -1,6 +1,4 @@
-import {
-    createBrowserRouter,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layouts/Main";
 import Home from "../Pages/Home/Home/Home";
 import Register from "../Components/Register/Register";
@@ -18,6 +16,7 @@ import AdminSuccessStories from "../Pages/Dashboard/AdminSuccessStories/AdminSuc
 import GotMarried from "../Pages/Dashboard/GotMarried/GotMarried";
 import ApprovedContactRequest from "../Pages/Dashboard/ApprovedContactRequest/ApprovedContactRequest";
 import MyFavourites from "../Pages/Dashboard/MyFavourites/MyFavourites";
+import Payment from "../Components/Payment/Payment";
 
 export const router = createBrowserRouter([
     {
@@ -43,6 +42,10 @@ export const router = createBrowserRouter([
             {
                 path: '/login',
                 element: <Login />
+            },
+            {
+                path: '/checkout/:id',
+                element: <PrivateRoute><Payment /></PrivateRoute>
             },
         ]
     },
@@ -88,5 +91,5 @@ export const router = createBrowserRouter([
                 element: <ApprovedContactRequest />
             },
         ]
-    }
+    },
 ]);
