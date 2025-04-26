@@ -1,24 +1,42 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
+import { useMutation, useQuery } from '@tanstack/react-query';
+// import { useState } from 'react';
 
-const ApprovedContactRequest =()=> {
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+const ApprovedContactRequest = () => {
+  const axiosSecure = useAxiosSecure();
+  // const [unApproved, setUnApproved] = useState(requests);
 
-  const fetchRequests = async () => {
-    const { data } = await axios.get('/api/admin/contact-requests');
-    setRequests(data);
-    setLoading(false);
-  };
+  const { data: requests = [], isLoading } = useQuery({
+    queryKey: ['approveContactRequests'],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/admin/pending-contact-requests`);
+      console.log(res.data);
+      return res.data;
+    }
+  });
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
+  const approveRequest = useMutation({
+    mutationFn: async (id) => {
+      await axiosSecure.patch(`/admin/approve-contact-request/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['approveContactRequests']);
+      Swal.fire('Deleted!', 'Contact request Approved.', 'success');
+    }
+  });
 
-  const approve = async (id) => {
-    await axios.patch(`/api/admin/contact-requests/${id}`);
-    setRequests((prev) => prev.filter((req) => req._id !== id));
+  const handleApprove = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to approve the contact.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, approve it!'
+    }).then((res) => {
+      if (res.isConfirmed) approveRequest.mutate(id);
+    });
   };
 
   return (
@@ -38,32 +56,32 @@ const ApprovedContactRequest =()=> {
 
           <tbody>
             <AnimatePresence>
-              {loading ? (
+              {isLoading ? (
                 <tr>
                   <td colSpan={4} className="py-6 text-center text-gray-500">
                     Loading…
                   </td>
                 </tr>
-              ) : requests.length === 0 ? (
+              ) : requests?.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="py-6 text-center text-gray-500">
                     No pending requests
                   </td>
                 </tr>
               ) : (
-                requests.map((r) => (
+                requests?.map((r) => (
                   <motion.tr
                     key={r._id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <td className="px-4 py-2">{r.name}</td>
-                    <td className="px-4 py-2">{r.email}</td>
-                    <td className="px-4 py-2">#{r.biodataId}</td>
+                    <td className="px-4 py-2">{r?.requesterName}</td>
+                    <td className="px-4 py-2">{r?.requesterEmail}</td>
+                    <td className="px-4 py-2">#{r?.bioDataId}</td>
                     <td className="px-4 py-2">
                       <button
-                        onClick={() => approve(r._id)}
+                        onClick={() => handleApprove(r._id)}
                         className="px-4 py-1 bg-emerald-600 text-white rounded text-xs hover:bg-emerald-700"
                       >
                         Approve Contact

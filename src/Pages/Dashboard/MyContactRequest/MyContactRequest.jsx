@@ -1,26 +1,43 @@
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import axios from 'axios';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
 import { motion, AnimatePresence } from 'framer-motion';
-import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useAuth from '../../../Hooks/useAuth';
 
-export default function MyContactRequest() {
-    const [refresh, setRefresh] = useState(0);
-    const { user } = useAuth();
+const MyContactRequest = () => {
+    const queryClient = useQueryClient();
     const axiosSecure = useAxiosSecure();
+    const { user } = useAuth();
 
     const { data: requests = [], isLoading } = useQuery({
-        queryKey: ['myContactRequests', refresh],
+        queryKey: ['myContactRequests'],
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/my-contact-requests/${user?.email}`);
+            console.log(res.data);
             return res.data;
         }
     });
 
-    const handleDelete = async (id) => {
-        await axios.delete(`/api/user/contact-requests/${id}`);
-        setRefresh((prev) => prev + 1); // refetch
+    const deleteRequest = useMutation({
+        mutationFn: async (id) => {
+            await axiosSecure.delete(`/user/contact-requests/${id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['myContactRequests']);
+            Swal.fire('Deleted!', 'Your contact request was removed.', 'success');
+        }
+    });
+
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This will remove your contact request.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!'
+        }).then((res) => {
+            if (res.isConfirmed) deleteRequest.mutate(id);
+        });
     };
 
     return (
@@ -43,42 +60,42 @@ export default function MyContactRequest() {
                         <AnimatePresence>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={6} className="py-6 text-center text-gray-500">
+                                    <td colSpan={6} className="text-center py-8 text-gray-500">
                                         Loading…
                                     </td>
                                 </tr>
-                            ) : requests.length === 0 ? (
+                            ) : requests?.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="py-6 text-center text-gray-500">
+                                    <td colSpan={6} className="text-center py-8 text-gray-500">
                                         No contact requests yet.
                                     </td>
                                 </tr>
                             ) : (
-                                requests.map((r) => (
+                                requests?.map((req) => (
                                     <motion.tr
-                                        key={r._id}
+                                        key={req._id}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
                                     >
-                                        <td className="px-4 py-2">{r.name}</td>
-                                        <td className="px-4 py-2">#{r.biodataId}</td>
+                                        <td className="px-4 py-2">{req.requestedName}</td>
+                                        <td className="px-4 py-2">#{req.bioDataId}</td>
                                         <td className="px-4 py-2 font-medium">
-                                            {r.approved ? (
+                                            {req.approved ? (
                                                 <span className="text-emerald-600">Approved</span>
                                             ) : (
                                                 <span className="text-yellow-500">Pending</span>
                                             )}
                                         </td>
                                         <td className="px-4 py-2">
-                                            {r.approved ? r.mobile : '—'}
+                                            {req.approved ? req.requestedMobile : '—'}
                                         </td>
                                         <td className="px-4 py-2">
-                                            {r.approved ? r.email : '—'}
+                                            {req.approved ? req.requestedEmail : '—'}
                                         </td>
                                         <td className="px-4 py-2">
                                             <button
-                                                onClick={() => handleDelete(r._id)}
+                                                onClick={() => handleDelete(req._id)}
                                                 className="text-xs bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                                             >
                                                 Delete
@@ -94,3 +111,5 @@ export default function MyContactRequest() {
         </div>
     );
 }
+
+export default MyContactRequest;

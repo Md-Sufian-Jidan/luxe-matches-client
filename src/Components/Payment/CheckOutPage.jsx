@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
@@ -14,6 +14,7 @@ const CheckoutPage = ({ singleBioData }) => {
     const { handleSubmit } = useForm();
     const axiosSecure = useAxiosSecure();
     const [clientSecret, setClientSecret] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         axiosSecure.post('/create-payment-intent', { amount: 5 })
@@ -76,6 +77,9 @@ const CheckoutPage = ({ singleBioData }) => {
                     bioDataId: singleBioData?.bioData?.bioDataId,
                     requesterEmail: user?.email,
                     requesterName: user?.displayName,
+                    requestedName: singleBioData?.name,
+                    requestedEmail: singleBioData?.email,
+                    requestedMobile: singleBioData?.bioData?.mobile,
                     approved: false,
                     paymentId: paymentIntent?.id,
                     paymentStatus: paymentIntent?.status,
@@ -93,7 +97,7 @@ const CheckoutPage = ({ singleBioData }) => {
                             showConfirmButton: false,
                             timer: 1500
                         });
-                        navigate('/dashboard/contacts')
+                        navigate('/dashboard/requests')
                     })
                     .catch(err => {
                         console.log(err);

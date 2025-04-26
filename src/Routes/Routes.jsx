@@ -17,6 +17,7 @@ import GotMarried from "../Pages/Dashboard/GotMarried/GotMarried";
 import ApprovedContactRequest from "../Pages/Dashboard/ApprovedContactRequest/ApprovedContactRequest";
 import MyFavourites from "../Pages/Dashboard/MyFavourites/MyFavourites";
 import Payment from "../Components/Payment/Payment";
+import MyContactRequest from "../Pages/Dashboard/MyContactRequest/MyContactRequest";
 
 export const router = createBrowserRouter([
     {
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/favourites',
                 element: <PrivateRoute><MyFavourites /></PrivateRoute>
+            },
+            {
+                path: '/dashboard/requests',
+                element: <PrivateRoute><MyContactRequest /></PrivateRoute>
             },
             {
                 path: '/dashboard/married',
