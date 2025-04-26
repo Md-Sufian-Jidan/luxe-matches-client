@@ -19,6 +19,7 @@ import MyFavourites from "../Pages/Dashboard/MyFavourites/MyFavourites";
 import Payment from "../Components/Payment/Payment";
 import MyContactRequest from "../Pages/Dashboard/MyContactRequest/MyContactRequest";
 import AboutUs from "../Pages/AboutUs/AboutUs";
+import Contact from "../Pages/Contact/Contact";
 
 export const router = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
             {
                 path: '/about',
                 element: <AboutUs />
+            },
+            {
+                path: '/contact',
+                element: <Contact />
             },
             {
                 path: '/user/view-bioData/:id',
