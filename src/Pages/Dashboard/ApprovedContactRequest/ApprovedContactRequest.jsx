@@ -1,18 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
-import { useMutation, useQuery } from '@tanstack/react-query';
-// import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const ApprovedContactRequest = () => {
   const axiosSecure = useAxiosSecure();
-  // const [unApproved, setUnApproved] = useState(requests);
+  const queryClient = useQueryClient();
 
-  const { data: requests = [], isLoading } = useQuery({
-    queryKey: ['approveContactRequests'],
+  const { data: requests = [], isLoading, refetch } = useQuery({
+    queryKey: ['approveContactRequests',],
     queryFn: async () => {
       const res = await axiosSecure.get(`/admin/pending-contact-requests`);
-      console.log(res.data);
       return res.data;
     }
   });
@@ -21,10 +19,6 @@ const ApprovedContactRequest = () => {
     mutationFn: async (id) => {
       await axiosSecure.patch(`/admin/approve-contact-request/${id}`);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['approveContactRequests']);
-      Swal.fire('Deleted!', 'Contact request Approved.', 'success');
-    }
   });
 
   const handleApprove = (id) => {
@@ -35,9 +29,22 @@ const ApprovedContactRequest = () => {
       showCancelButton: true,
       confirmButtonText: 'Yes, approve it!'
     }).then((res) => {
-      if (res.isConfirmed) approveRequest.mutate(id);
+      if (res.isConfirmed) {
+        approveRequest.mutate(id, {
+          onSuccess: () => {
+            queryClient.invalidateQueries(['approveContactRequests']);
+            Swal.fire({
+              title: "Approved!",
+              text: "Contact Request Approved",
+              icon: "success"
+            });
+            refetch();
+          }
+        });
+      }
     });
   };
+  const filterApprove = requests.filter(item => item?.approved === false);
 
   return (
     <div className="space-y-6">
@@ -62,14 +69,14 @@ const ApprovedContactRequest = () => {
                     Loading…
                   </td>
                 </tr>
-              ) : requests?.length === 0 ? (
+              ) : filterApprove?.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="py-6 text-center text-gray-500">
                     No pending requests
                   </td>
                 </tr>
               ) : (
-                requests?.map((r) => (
+                filterApprove?.map((r) => (
                   <motion.tr
                     key={r._id}
                     initial={{ opacity: 0 }}

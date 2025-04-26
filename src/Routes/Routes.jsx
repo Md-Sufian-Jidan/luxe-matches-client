@@ -18,6 +18,7 @@ import ApprovedContactRequest from "../Pages/Dashboard/ApprovedContactRequest/Ap
 import MyFavourites from "../Pages/Dashboard/MyFavourites/MyFavourites";
 import Payment from "../Components/Payment/Payment";
 import MyContactRequest from "../Pages/Dashboard/MyContactRequest/MyContactRequest";
+import AboutUs from "../Pages/AboutUs/AboutUs";
 
 export const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
             {
                 path: '/biodatas',
                 element: <PrivateRoute> <BioDatas /></PrivateRoute>
+            },
+            {
+                path: '/about',
+                element: <AboutUs />
             },
             {
                 path: '/user/view-bioData/:id',
