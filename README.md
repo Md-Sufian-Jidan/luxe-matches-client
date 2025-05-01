@@ -3,6 +3,7 @@
 Welcome to the **client-side** of **LuxeMatches** — a premium, elegant, and secure matrimonial matchmaking platform.  
 This is a fully responsive React application, providing users an exceptional experience in finding their perfect life partner.
 
+## Live Site : <a href='https://luxe-matches-client.vercel.app/' target='_blank'>View</a>
 ---
 
 ## 🚀 Tech Stack
