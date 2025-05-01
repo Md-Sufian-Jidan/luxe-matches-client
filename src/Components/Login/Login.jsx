@@ -64,7 +64,7 @@ const Login = () => {
                     );
             })
             .catch(res => {
-                console.log(res);
+                // console.log(res);
             });
     };
 

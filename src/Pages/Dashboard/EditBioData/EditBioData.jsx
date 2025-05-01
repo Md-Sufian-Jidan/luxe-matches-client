@@ -7,10 +7,6 @@ import Swal from 'sweetalert2';
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet';
 
-// 🔸 Mock fetch helpers – replace with real API calls
-const fetchExistingBiodata = async () => null;          // GET /api/biodata/me
-const saveOrUpdateBiodata = async (data) => console.log('Sent →', data);
-
 const EditBioData = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
@@ -80,7 +76,7 @@ const EditBioData = () => {
         };
         axiosSecure.patch(`/user/bio-data-edit/${user?.email}`, editBioData)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 if (res.data.matchedCount > 0) {
                     Swal.fire({
                         icon: 'success',
@@ -93,7 +89,7 @@ const EditBioData = () => {
                 }
             })
             .catch(err => {
-                console.log(err);
+                // console.log(err);
             });
     };
     const divisions = ['Dhaka', 'Chattogram', 'Rangpur', 'Barisal', 'Khulna', 'Maymansign', 'Sylhet',];

@@ -14,7 +14,6 @@ const MyContactRequest = () => {
         queryKey: ['myContactRequests'],
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/my-contact-requests/${user?.email}`);
-            console.log(res.data);
             return res.data;
         }
     });

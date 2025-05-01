@@ -34,7 +34,6 @@ const ViewBioData = () => {
                     title: "Success",
                     text: "Your bioData is Processing for the Premium",
                 });
-                console.log(res.data);
             })
         setSending(false);
         setRequestSent(true);

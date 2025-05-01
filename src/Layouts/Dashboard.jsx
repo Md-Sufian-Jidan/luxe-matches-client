@@ -2,15 +2,15 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, Menu, X, LayoutDashboard, User, Star, Users, BadgeCheck, Mail } from 'lucide-react';
-import useAuth from '../Hooks/useAuth';
 import Swal from 'sweetalert2';
+import useAuth from '../Hooks/useAuth';
 import useCheck from '../Hooks/useCheck.jsx'
 
 const Dashboard = () => {
+    const { logOut } = useAuth();
     const { isAdmin } = useCheck();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
-    const { logOut } = useAuth();
 
     const handleLogout = () => {
         logOut()
@@ -21,6 +21,7 @@ const Dashboard = () => {
                     showConfirmButton: false,
                     timer: 1500
                 })
+                navigate('/');
             })
     };
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);

@@ -21,11 +21,13 @@ import MyContactRequest from "../Pages/Dashboard/MyContactRequest/MyContactReque
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import Contact from "../Pages/Contact/Contact";
 import AdminRoute from "../Routes/AdminRoute";
+import Error from "../Components/Error/Error";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Main />,
+        errorElement: <Error />,
         children: [
             {
                 path: '/',
@@ -33,7 +35,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/biodatas',
-                element: <PrivateRoute> <BioDatas /></PrivateRoute>
+                element: <BioDatas />
             },
             {
                 path: '/user/view-bioData/:id',

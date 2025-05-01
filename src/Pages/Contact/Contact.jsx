@@ -7,7 +7,6 @@ const Contact = () => {
     const { register, handleSubmit, reset } = useForm();
 
     const onSubmit = (data) => {
-        console.log(data);
         Swal.fire('Thank You!', 'Your message has been received. We will contact you soon.', 'success');
         reset();
     };

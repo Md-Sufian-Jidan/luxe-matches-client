@@ -22,7 +22,7 @@ const CheckoutPage = ({ singleBioData }) => {
                 setClientSecret(res?.data?.client_secret);
             })
             .catch(err => {
-                console.log(err);
+                // console.log(err);
             })
     }, []);
 
@@ -42,12 +42,12 @@ const CheckoutPage = ({ singleBioData }) => {
             card
         })
         if (error) {
-            console.log('payment method error', error);
+            // console.log('payment method error', error);
             Swal.fire('Payment Error', error.message, 'error');
         }
         else {
             toast.warn('Your payment is processing!');
-            console.log('success', paymentMethod);
+            // console.log('success', paymentMethod);
         };
         const address = {
             line1: "Bangladesh",
@@ -68,10 +68,10 @@ const CheckoutPage = ({ singleBioData }) => {
         });
 
         if (confirmError) {
-            console.log(confirmError);
+            // console.log(confirmError);
         }
         else {
-            console.log('payment intent ', paymentIntent);
+            // console.log('payment intent ', paymentIntent);
             if (paymentIntent.status === 'succeeded') {
                 const paymentDetails = {
                     bioDataId: singleBioData?.bioData?.bioDataId,
@@ -100,7 +100,7 @@ const CheckoutPage = ({ singleBioData }) => {
                         navigate('/dashboard/requests')
                     })
                     .catch(err => {
-                        console.log(err);
+                        // console.log(err);
                     })
             }
         }

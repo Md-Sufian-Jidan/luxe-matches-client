@@ -107,9 +107,6 @@ const Register = () => {
                     });
                 })
         }
-
-        console.log('✅ Form Data:', data);
-        // TODO: send data to backend
     };
 
     const handleImageChange = (e) => {
