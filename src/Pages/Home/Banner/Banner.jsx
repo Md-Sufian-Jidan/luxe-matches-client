@@ -25,7 +25,7 @@ const slides = [
 
 const Banner = () => {
     return (
-        <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] relative">
+        <div className="w-full h-[450px] md:h-[550px] lg:h-[650px] relative">
             <Swiper
                 modules={[EffectFade, Autoplay, Pagination]}
                 effect="fade"
@@ -41,15 +41,15 @@ const Banner = () => {
                             style={{ backgroundImage: `url(${slide.bg})` }}
                         >
                             {/* Overlay */}
-                            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+                            <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
 
                             {/* Text Content */}
-                            <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 text-white">
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 text-white">
                                 <motion.h2
                                     initial={{ y: -40, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ duration: 0.7 }}
-                                    className="text-3xl md:text-5xl font-bold drop-shadow-lg"
+                                    className="text-4xl md:text-6xl font-heading font-bold drop-shadow-xl tracking-tight leading-tight"
                                 >
                                     {slide.title}
                                 </motion.h2>
@@ -57,7 +57,7 @@ const Banner = () => {
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.2, duration: 0.7 }}
-                                    className="mt-4 text-lg md:text-xl drop-shadow"
+                                    className="mt-5 text-lg md:text-2xl font-body drop-shadow-sm max-w-2xl"
                                 >
                                     {slide.subtitle}
                                 </motion.p>
@@ -68,6 +68,6 @@ const Banner = () => {
             </Swiper>
         </div>
     );
-}
+};
 
 export default Banner;

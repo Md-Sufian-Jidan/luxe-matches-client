@@ -1,14 +1,24 @@
 import CountUp from 'react-countup';
 import { motion } from 'framer-motion';
-
-const counters = [
-    { title: 'Total Biodatas', count: 172, color: 'text-rose-600' },
-    { title: 'Female Biodatas', count: 96, color: 'text-pink-500' },
-    { title: 'Male Biodatas', count: 76, color: 'text-blue-500' },
-    { title: 'Marriages Completed', count: 24, color: 'text-emerald-600' },
-];
+import { useQuery } from '@tanstack/react-query';
+import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 
 const SuccessCounter = () => {
+    const axiosPublic = useAxiosPublic();
+    const { data } = useQuery({
+        queryKey: ['successCounter'],
+        queryFn: async () => {
+            const res = await axiosPublic.get('/home-stats');
+            return res.data;
+        }
+    });
+    const counters = [
+        { title: 'Total Biodatas', count: data?.total, color: 'text-rose-600' },
+        { title: 'Female Biodatas', count: data?.female, color: 'text-pink-500' },
+        { title: 'Male Biodatas', count: data?.male, color: 'text-blue-500' },
+        { title: 'Marriages Completed', count: data?.marriage, color: 'text-emerald-600' },
+    ];
+
     return (
         <section className="bg-rose-50 py-14">
             <div className="max-w-7xl mx-auto px-4 text-center">
