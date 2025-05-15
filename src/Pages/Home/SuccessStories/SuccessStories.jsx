@@ -14,30 +14,31 @@ const SuccessStories = () => {
     queryKey: ['stories'],
     queryFn: async () => {
       const res = await axiosPublic.get('/success-stories');
-      const sortedStories = res?.data.sort(
+      return res?.data.sort(
         (a, b) => new Date(b.marriageDate) - new Date(a.marriageDate)
       );
-      return sortedStories;
-    }
+    },
   });
 
   return (
-    <section className="bg-white py-14">
+    <section className="bg-bg-soft py-16">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-3xl md:text-4xl font-heading text-primary text-center mb-12"
+        >
           Real Love Stories ❤️
-        </h2>
+        </motion.h2>
 
-        {/* Swiper Slider */}
         <Swiper
           modules={[Autoplay, Pagination]}
           slidesPerView={1}
           spaceBetween={30}
           loop={true}
-          autoplay={{
-            delay: 3500,
-            disableOnInteraction: false,
-          }}
+          autoplay={{ delay: 4000, disableOnInteraction: false }}
           pagination={{ clickable: true }}
           breakpoints={{
             640: { slidesPerView: 1 },
@@ -52,24 +53,22 @@ const SuccessStories = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-rose-50 p-6 rounded-lg shadow-md text-center h-full flex flex-col items-center"
+                className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 text-center flex flex-col items-center h-full"
               >
                 <img
                   src={story.image}
-                  alt="Couple"
-                  className="w-20 h-20 rounded-full object-cover mb-4"
+                  alt={`Couple - ${story._id}`}
+                  className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-accent"
                 />
-                <p className="text-gray-600 text-sm mb-2">
-                  Married on: {new Date(story.marriageDate).toLocaleDateString()}
+                <p className="text-sm font-body text-text-secondary mb-2">
+                  Married on: <span className="text-text-main font-medium">{new Date(story.marriageDate).toLocaleDateString()}</span>
                 </p>
-
-                <div className="flex justify-center mb-2 text-rose-500">
+                <div className="flex justify-center text-accent mb-2">
                   {[...Array(story.stars)].map((_, idx) => (
-                    <AiFillStar key={idx} />
+                    <AiFillStar key={idx} className="text-xl" />
                   ))}
                 </div>
-
-                <p className="text-gray-700 text-sm italic">“{story.review}”</p>
+                <p className="text-sm italic text-text-secondary font-body">“{story.review}”</p>
               </motion.div>
             </SwiperSlide>
           ))}

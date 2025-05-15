@@ -2,85 +2,91 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import axios from 'axios';
-
-const fetchPremiumBiodatas = async () => {
-    const { data } = await axios.get('/users-premium-biodata');
-    return data;
-};
+import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+import useAuth from '../../../Hooks/useAuth';
 
 const PremiumBiodata = () => {
+    const axiosPublic = useAxiosPublic();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [visibleCount, setVisibleCount] = useState(6);
     const [sortOrder, setSortOrder] = useState('asc');
 
     const { data: profiles = [], isLoading, isError } = useQuery({
         queryKey: ['premiumBiodata'],
-        queryFn: fetchPremiumBiodatas,
+        queryFn: async () => {
+            const { data } = await axiosPublic.get('/users-premium-biodata');
+            return data;
+        },
     });
 
     const sortedProfiles = [...profiles].sort((a, b) =>
-        sortOrder === 'asc' ? a.age - b.age : b.age - a.age
+        sortOrder === 'asc' ? a.bioData.age - b.bioData.age : b.bioData.age - a.bioData.age
     );
 
     const visibleProfiles = sortedProfiles.slice(0, visibleCount);
 
     const handleViewProfile = (id) => {
-        // Navigate directly to the profile
-        navigate(`/user/view-bioData/${id}`);
+        user ? navigate(`/user/view-bioData/${id}`) : navigate('/login');
     };
 
-    if (isLoading) {
-        return <div className="text-center py-20 font-body text-gray-600">Loading premium members...</div>;
-    }
-
-    if (isError) {
-        return <div className="text-center py-20 font-body text-red-500">Failed to load biodatas. Please try again.</div>;
-    }
+    if (isLoading)
+        return (
+            <div className="text-center py-20 font-body text-lg text-text-secondary">
+                Loading...
+            </div>
+        );
+    if (isError)
+        return (
+            <div className="text-center py-20 font-body text-red-500">
+                Error loading biodatas.
+            </div>
+        );
 
     return (
         <section className="max-w-7xl mx-auto px-4 py-16">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-                <h2 className="text-3xl font-heading font-semibold text-rose-600 tracking-tight">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-4">
+                <h2 className="text-4xl font-heading text-primary font-semibold tracking-tight">
                     Premium Members
                 </h2>
-                <div className="flex items-center gap-2">
-                    <label htmlFor="sort" className="text-sm font-body text-gray-700">Sort by:</label>
-                    <select
-                        id="sort"
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                        className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-body shadow-sm focus:outline-none focus:ring-1 focus:ring-rose-400"
-                    >
-                        <option value="asc">Age: Ascending</option>
-                        <option value="desc">Age: Descending</option>
-                    </select>
-                </div>
+                <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="border border-gray-300 rounded-full px-8 py-2 text-sm font-body text-text-main focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                    <option value="asc">Age: Ascending</option>
+                    <option value="desc">Age: Descending</option>
+                </select>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {/* Biodata Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 {visibleProfiles.map((profile, index) => (
                     <motion.div
                         key={profile._id}
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="bg-white border border-rose-100 rounded-2xl shadow-sm hover:shadow-md transition-all p-6 text-center"
+                        whileHover={{ scale: 1.03 }}
+                        className="bg-white border border-rose-100 rounded-2xl shadow-md hover:shadow-lg transition-all p-6 text-center"
                     >
                         <img
-                            src={profile.image}
-                            alt={`Profile image of biodata ${profile.id}`}
-                            className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border border-rose-200"
+                            src={profile?.photoURL}
+                            alt={`Biodata ${profile?.photoURL}`}
+                            className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-2 border-accent"
                         />
-                        <h3 className="text-lg font-heading font-semibold text-gray-800">Biodata #{profile.id}</h3>
-                        <p className="text-sm text-gray-600 font-body">{profile.type}</p>
-                        <p className="text-sm text-gray-600 font-body">{profile.division}</p>
-                        <p className="text-sm text-gray-600 font-body">
-                            {profile.age} yrs • {profile.occupation}
+                        <h3 className="text-xl font-heading text-text-main font-semibold mb-1">
+                            Biodata #{profile?.bioData?.bioDataId}
+                        </h3>
+                        <p className="text-sm text-text-secondary font-body">{profile?.type}</p>
+                        <p className="text-sm text-text-secondary font-body">{profile?.division}</p>
+                        <p className="text-sm text-text-secondary font-body">
+                            {profile?.bioData?.age} yrs &bull; {profile?.bioData?.occupation}
                         </p>
                         <button
-                            onClick={() => handleViewProfile(profile._id)}
-                            className="mt-4 bg-rose-600 text-white px-5 py-1.5 text-sm rounded-full hover:bg-rose-700 transition font-body font-medium"
+                            onClick={() => handleViewProfile(profile?._id)}
+                            className="mt-5 inline-block bg-accent text-white px-6 py-2 rounded-full text-sm font-body hover:bg-opacity-90 transition"
                         >
                             View Profile
                         </button>
@@ -88,11 +94,12 @@ const PremiumBiodata = () => {
                 ))}
             </div>
 
+            {/* Load More */}
             {visibleCount < sortedProfiles.length && (
-                <div className="mt-10 text-center">
+                <div className="mt-12 text-center">
                     <button
                         onClick={() => setVisibleCount((prev) => prev + 6)}
-                        className="bg-rose-100 text-rose-700 font-body px-6 py-2 rounded-full hover:bg-rose-200 transition"
+                        className="bg-accent text-primary font-body px-8 py-2.5 rounded-full hover:bg-rose-200 transition"
                     >
                         Load More
                     </button>

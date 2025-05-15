@@ -1,62 +1,76 @@
-# 💖 LuxeMatches – Client Side
+# 💖 LuxeMatches
 
-Welcome to the **client-side** of **LuxeMatches** — a premium, elegant, and secure matrimonial matchmaking platform.  
-This is a fully responsive React application, providing users an exceptional experience in finding their perfect life partner.
+![LuxeMatches Logo](https://i.ibb.co/mrtbLH2j/luxe-logo.png)
 
-## Live Site : <a href='https://luxe-matches-client.vercel.app/' target='_blank'>View</a>
----
+> A premium matchmaking experience tailored for individuals seeking meaningful and lasting connections.
 
-## 🚀 Tech Stack
-
-| Technology           | Purpose                                      |
-|----------------------|----------------------------------------------|
-| React 19             | Frontend UI Framework                        |
-| React Router DOM 7   | Routing and Protected Routes                |
-| Firebase             | Authentication (Email/Password, Google)     |
-| Stripe               | Secure Online Payments                      |
-| Axios                | HTTP Requests                               |
-| React Query (Tanstack) | Data Fetching, Caching & State Management  |
-| Framer Motion        | Smooth Animations                           |
-| React Hook Form      | Form Validation                             |
-| Zod                  | Schema-based Form Validation (Optional)     |
-| SweetAlert2          | Elegant Alerts & Confirmations              |
-| React Select         | Stylish Select Inputs                       |
-| SwiperJS             | Sliders & Carousels                         |
-| React CountUp        | Animated Counters (for Stats Section)        |
-| Recharts             | Chart & Graph Components (for Admin Stats)  |
+[🚀 **Live Demo**](https://luxe-matches-client.vercel.app/) &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ✨ *Modern UI · Verified Profiles · Success Stories*
 
 ---
 
-## ✨ Major Features
+## 🌟 Overview
 
--🔥 Firebase Authentication (Google + Email/Password)
--🔒 Private Routes and Admin Protected Routes
--🎯 Create / Edit / View Biodata
--🏷 Filter Biodata by Gender, Division, and Age Range
--📦 Pagination & Server Side Data Fetching
--📑 Premium Membership Requests
--🧾 Stripe Checkout for Contact Requests ($5 Payment)
--🗂 My Favourites, My Contact Requests, and Premium Requests
--🛡️ JWT Authentication for Secured API Calls
--📊 Admin Dashboard (User Management, Revenue Stats, Approve Requests)
--🌟 Success Stories Section with SwiperJS Slider
--⚡ Toast Notifications, SweetAlert2 Confirmation Popups
--🎨 Framer Motion Animations
-📱Fully Responsive on Mobile, Tablet & Desktop
+**LuxeMatches** is a sophisticated matchmaking web application designed to provide a safe, elegant, and highly personalized experience for users looking for serious relationships. It features a modern UI, intuitive user journey, and a trusted platform for connecting people meaningfully. From secure biodata submissions to an admin-curated match approval system, LuxeMatches bridges the gap between tradition and technology.
+
+---
+
+## 📦 Tech Stack
+
+![React](https://img.shields.io/badge/React-19.0.0-61DAFB?style=flat&logo=react)  
+![Firebase](https://img.shields.io/badge/Firebase-11.6.0-FFCA28?style=flat&logo=firebase)  
+![Stripe](https://img.shields.io/badge/Stripe-3.6.0-635BFF?style=flat&logo=stripe)  
+![React Router](https://img.shields.io/badge/React--Router-7.5.1-CA4245?style=flat&logo=react-router)  
+![React Hook Form](https://img.shields.io/badge/React--Hook--Form-7.56.1-EC5990?style=flat&logo=react-hook-form)  
+![Framer Motion](https://img.shields.io/badge/Framer--Motion-12.8.0-0055FF?style=flat&logo=framer)  
+![TanStack Query](https://img.shields.io/badge/React--Query-5.74.4-FF4154?style=flat&logo=react-query)  
+
+And more: `Zod`, `SweetAlert2`, `Recharts`, `Swiper`, `Lucide`, `Axios`, `LocalForage`, `React Toastify`, `PropTypes`, `Clsx`, etc.
+
+---
+
+| ![Home](https://i.ibb.co/FLWX1H32/luxe-matches-client-vercel-app-5.png) 
+
+---
+
+## ✨ Key Features
+
+- 🔐 **Secure User Authentication**  
+  Firebase-backed sign-in/sign-up with email validation and persistent sessions.
+
+- 📄 **Biodata Submission & Approval**  
+  Users submit detailed profiles, verified and approved by admins before appearing in search.
+
+- 💌 **Contact Request System**  
+  Members can send/receive contact requests with controlled privacy.
+
+- 💍 **Success Stories Sharing**  
+  Share love journeys to inspire the community!
+
+- 🛠️ **Admin Dashboard**  
+  Admins can manage users, content, approvals, and reports with ease.
+
+- 🎨 **Modern UI/UX**  
+  Soft pastels, rounded elements, smooth animations, and clean layouts for a luxurious experience.
+
+---
+
+## 🛠️ Installation
+
+1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/luxematches-client.git
-cd luxe-matches-client
+git clone https://github.com/yourusername/luxematches.git
+cd luxematches
 
-# Install dependencies
 npm install
 
-# Add your Firebase credentials to .env
-VITE_API_URL=http://localhost:5000/api
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
-VITE_STRIPE_PUBLIC_KEY=your_stripe_publishable_key
+VITE_FIREBASE_API_KEY=your_key
+VITE_STRIPE_PUBLIC_KEY=your_key
+VITE_BACKEND_URL=https://your-backend.com
 
-# Run the server
 npm run dev
+
+📬 Contact
+For business inquiries, collaborations, or support:
+Email: jidanjiyaj03@gmail.com
+LinkedIn: https://www.linkedin.com/in/md-abu-sufian-jidan/

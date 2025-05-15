@@ -38,7 +38,9 @@ const MyFavourites = () => {
       text: 'This biodata will be removed from your favourites.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#4B1D3F', // primary color
+      cancelButtonColor: '#D4AF37',  // accent color
     }).then((result) => {
       if (result.isConfirmed) {
         deleteMutation.mutate(id);
@@ -51,18 +53,22 @@ const MyFavourites = () => {
       <Helmet>
         <title>LuxeMatches | Favourites</title>
       </Helmet>
-      <div className="space-y-6">
-        <h1 className="text-xl font-bold text-gray-800">My Favourites</h1>
 
-        <div className="overflow-x-auto bg-white rounded-xl shadow">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-100">
+      <div className="space-y-8 max-w-6xl mx-auto px-4 sm:px-6 py-6 font-body">
+        <h1 className="text-3xl font-heading text-primary mb-6">My Favourites</h1>
+
+        <div className="overflow-x-auto bg-bg-soft rounded-2xl shadow-lg">
+          <table className="min-w-full text-text-main text-sm md:text-base">
+            <thead className="bg-primary bg-opacity-10">
               <tr>
-                <th className="px-4 py-2 text-left">Name</th>
-                <th className="px-4 py-2 text-left">Biodata ID</th>
-                <th className="px-4 py-2 text-left">Permanent Address</th>
-                <th className="px-4 py-2 text-left">Occupation</th>
-                <th className="px-4 py-2 text-left">Action</th>
+                {['Name', 'Biodata ID', 'Permanent Address', 'Occupation', 'Action'].map((th) => (
+                  <th
+                    key={th}
+                    className="px-6 py-3 text-left font-heading text-text-secondary tracking-wide"
+                  >
+                    {th}
+                  </th>
+                ))}
               </tr>
             </thead>
 
@@ -70,13 +76,13 @@ const MyFavourites = () => {
               <AnimatePresence>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={5} className="py-6 text-center text-gray-500">
+                    <td colSpan={5} className="py-10 text-center text-text-secondary italic">
                       Loading…
                     </td>
                   </tr>
                 ) : favourites.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-6 text-center text-gray-500">
+                    <td colSpan={5} className="py-10 text-center text-text-secondary italic">
                       No favourites added yet.
                     </td>
                   </tr>
@@ -84,18 +90,23 @@ const MyFavourites = () => {
                   favourites.map((f) => (
                     <motion.tr
                       key={f._id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.25 }}
+                      className="border-b border-gray-200 last:border-0 hover:bg-bg-soft transition-colors"
                     >
-                      <td className="px-4 py-2">{f?.bio.name}</td>
-                      <td className="px-4 py-2">#{f.bio?.bioData.bioDataId}</td>
-                      <td className="px-4 py-2">{f.bio.bioData?.permanentDivision}</td>
-                      <td className="px-4 py-2">{f.bio.bioData?.occupation}</td>
-                      <td className="px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">{f?.bio.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-accent font-semibold">
+                        #{f.bio?.bioData.bioDataId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">{f.bio.bioData?.permanentDivision}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{f.bio.bioData?.occupation}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => handleDelete(f._id)}
-                          className="text-xs bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                          className="text-xs md:text-sm bg-btn hover:bg-primary transition-colors text-white font-medium px-4 py-1.5 rounded-2xl shadow-sm"
+                          aria-label={`Delete favourite biodata ${f?.bio.name}`}
                         >
                           Delete
                         </button>
@@ -110,6 +121,6 @@ const MyFavourites = () => {
       </div>
     </>
   );
-}
+};
 
 export default MyFavourites;

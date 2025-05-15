@@ -9,7 +9,7 @@ const ApprovedContactRequest = () => {
   const queryClient = useQueryClient();
 
   const { data: requests = [], isLoading, refetch } = useQuery({
-    queryKey: ['approveContactRequests',],
+    queryKey: ['approveContactRequests'],
     queryFn: async () => {
       const res = await axiosSecure.get(`/admin/pending-contact-requests`);
       return res.data;
@@ -24,27 +24,26 @@ const ApprovedContactRequest = () => {
 
   const handleApprove = (id) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to approve the contact.',
+      title: 'Approve Contact?',
+      text: 'This will approve the contact request.',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#4B1D3F',
+      cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, approve it!'
     }).then((res) => {
       if (res.isConfirmed) {
         approveRequest.mutate(id, {
           onSuccess: () => {
             queryClient.invalidateQueries(['approveContactRequests']);
-            Swal.fire({
-              title: "Approved!",
-              text: "Contact Request Approved",
-              icon: "success"
-            });
+            Swal.fire('Approved!', 'Contact request approved.', 'success');
             refetch();
           }
         });
       }
     });
   };
+
   const filterApprove = requests.filter(item => item?.approved === false);
 
   return (
@@ -52,17 +51,22 @@ const ApprovedContactRequest = () => {
       <Helmet>
         <title>LuxeMatches | Approved Contact</title>
       </Helmet>
-      <div className="space-y-6">
-        <h1 className="text-xl font-bold text-gray-800">Contact Request Approvals</h1>
 
-        <div className="overflow-x-auto bg-white rounded-xl shadow">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-100">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="space-y-8 font-body"
+      >
+        <h1 className="text-3xl font-heading text-primary">Contact Request Approvals</h1>
+
+        <div className="overflow-x-auto bg-white rounded-2xl shadow p-4">
+          <table className="min-w-full text-sm text-text-main">
+            <thead className="bg-bg-soft text-left font-heading text-text-secondary">
               <tr>
-                <th className="px-4 py-2 text-left">Name</th>
-                <th className="px-4 py-2 text-left">Email</th>
-                <th className="px-4 py-2 text-left">Biodata ID</th>
-                <th className="px-4 py-2 text-left">Action</th>
+                {['Name', 'Email', 'Biodata ID', 'Action'].map((header) => (
+                  <th key={header} className="px-6 py-3">{header}</th>
+                ))}
               </tr>
             </thead>
 
@@ -70,33 +74,36 @@ const ApprovedContactRequest = () => {
               <AnimatePresence>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={4} className="py-6 text-center text-gray-500">
+                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary">
                       Loading…
                     </td>
                   </tr>
                 ) : filterApprove?.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="py-6 text-center text-gray-500">
+                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary">
                       No pending requests
                     </td>
                   </tr>
                 ) : (
-                  filterApprove?.map((r) => (
+                  filterApprove.map((r) => (
                     <motion.tr
                       key={r._id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
+                      className="border-t hover:bg-bg-soft transition-colors"
                     >
-                      <td className="px-4 py-2">{r?.requesterName}</td>
-                      <td className="px-4 py-2">{r?.requesterEmail}</td>
-                      <td className="px-4 py-2">#{r?.bioDataId}</td>
-                      <td className="px-4 py-2">
+                      <td className="px-6 py-3">{r?.requesterName}</td>
+                      <td className="px-6 py-3">{r?.requesterEmail}</td>
+                      <td className="px-6 py-3 text-primary font-medium">
+                        #{r?.bioDataId}
+                      </td>
+                      <td className="px-6 py-3">
                         <button
                           onClick={() => handleApprove(r._id)}
-                          className="px-4 py-1 bg-emerald-600 text-white rounded text-xs hover:bg-emerald-700"
+                          className="px-4 py-1.5 text-xs font-medium bg-accent text-white rounded-xl hover:brightness-90 transition-all"
                         >
-                          Approve Contact
+                          Approve Contact
                         </button>
                       </td>
                     </motion.tr>
@@ -106,9 +113,9 @@ const ApprovedContactRequest = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </motion.div>
     </>
   );
-}
+};
 
 export default ApprovedContactRequest;

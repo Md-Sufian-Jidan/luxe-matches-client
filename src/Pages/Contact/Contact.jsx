@@ -2,97 +2,135 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import useAuth from '../../Hooks/useAuth';
 
 const Contact = () => {
-    const { register, handleSubmit, reset } = useForm();
+  const { user } = useAuth();
+  const { register, handleSubmit, reset } = useForm();
 
-    const onSubmit = (data) => {
-        Swal.fire('Thank You!', 'Your message has been received. We will contact you soon.', 'success');
-        reset();
-    };
+  const axiosSecure = useAxiosSecure();
 
-    return (
-        <>
-            <Helmet>
-                <title>LuxeMatches | ContactUs</title>
-            </Helmet>
-            <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
-                {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center"
-                >
-                    <h1 className="text-4xl font-bold text-rose-600 mb-4">Contact Us</h1>
-                    <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                        We'd love to hear from you! Whether you have a question, feedback, or need assistance — feel free to reach out.
-                    </p>
-                </motion.div>
+  const contact = useMutation({
+    mutationFn: (contactData) =>
+      axiosSecure.post('/user-contact', contactData)
+  });
 
-                {/* Form Section */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.8 }}
-                    className="bg-white shadow rounded-lg p-8 space-y-6"
-                >
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Your Name</label>
-                            <input
-                                type="text"
-                                {...register('name', { required: true })}
-                                placeholder="Enter your name"
-                                className="w-full border px-4 py-2 rounded"
-                                required
-                            />
-                        </div>
+  const onSubmit = async (data) => {
+    const { name, email, message } = data;
+    if (!name || !email || !message) {
+      return toast.error('All fields are required.');
+    }
+    const newContact = { name, email, message, createdAt: new Date() };
+    try {
+      contact.mutate(newContact, {
+        onSuccess: () => {
+          Swal.fire('Thank You!!', 'Your message has been received. We will contact you soon.', 'success');
+          refetch();
+        }
+      });
+      reset();
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Oops!', 'Something went wrong. Please try again.', 'error');
+    }
+  };
 
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Your Email</label>
-                            <input
-                                type="email"
-                                {...register('email', { required: true })}
-                                placeholder="Enter your email"
-                                className="w-full border px-4 py-2 rounded"
-                                required
-                            />
-                        </div>
+  return (
+    <>
+      <Helmet>
+        <title>LuxeMatches | Contact Us</title>
+      </Helmet>
+      <div className="max-w-6xl mx-auto px-6 py-16 space-y-16 bg-bg-soft rounded-2xl shadow-md font-body">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center px-4"
+        >
+          <h1 className="text-5xl font-heading font-bold text-primary mb-4">
+            Contact Us
+          </h1>
+          <p className="text-text-secondary max-w-3xl mx-auto text-lg leading-relaxed">
+            We'd love to hear from you! Whether you have a question, feedback, or need assistance — feel free to reach out.
+          </p>
+        </motion.div>
 
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Your Message</label>
-                            <textarea
-                                {...register('message', { required: true })}
-                                placeholder="Write your message..."
-                                className="w-full border px-4 py-2 rounded h-32 resize-none"
-                                required
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="w-full bg-rose-600 text-white font-semibold py-2 rounded hover:bg-rose-700 transition"
-                        >
-                            Send Message
-                        </button>
-                    </form>
-                </motion.div>
-
-                {/* Info Section */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                    className="text-center space-y-2 text-gray-600"
-                >
-                    <p>Email: support@luxematches.com</p>
-                    <p>Phone: +880 1234 567 890</p>
-                    <p>Office: Dhaka, Bangladesh</p>
-                </motion.div>
+        {/* Form Section */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="bg-white rounded-2xl shadow-md p-10 max-w-3xl mx-auto"
+        >
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <div>
+              <label className="block text-sm font-heading font-semibold text-primary mb-2">
+                Your Name
+              </label>
+              <input
+                type="text"
+                {...register('name', { required: true })}
+                defaultValue={user?.displayName}
+                placeholder="Enter your name"
+                className="w-full border border-gray-300 rounded-2xl px-5 py-3 text-text-main font-body placeholder:text-text-secondary transition focus:outline-none focus:ring-2 focus:ring-accent"
+                required
+              />
             </div>
-        </>
-    );
-}
+
+            <div>
+              <label className="block text-sm font-heading font-semibold text-primary mb-2">
+                Your Email
+              </label>
+              <input
+                type="email"
+                {...register('email', { required: true })}
+                defaultValue={user?.email}
+                readOnly
+                placeholder="Enter your email"
+                className="w-full border border-gray-300 rounded-2xl px-5 py-3 text-text-main font-body placeholder:text-text-secondary transition focus:outline-none focus:ring-2 focus:ring-accent"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-heading font-semibold text-primary mb-2">
+                Your Message
+              </label>
+              <textarea
+                {...register('message', { required: true })}
+                placeholder="Write your message..."
+                className="w-full border border-gray-300 rounded-2xl px-5 py-4 text-text-main font-body placeholder:text-text-secondary resize-none h-36 transition focus:outline-none focus:ring-2 focus:ring-accent"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-accent hover:bg-primary text-white font-semibold font-body py-3 rounded-2xl shadow-md transition"
+            >
+              Send Message
+            </button>
+          </form>
+        </motion.div>
+
+        {/* Info Section */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-center space-y-3 text-text-secondary px-4 font-body max-w-md mx-auto"
+        >
+          <p>Email: <a href="mailto:support@luxematches.com" className="text-accent hover:underline">support@luxematches.com</a></p>
+          <p>Phone: <a href="tel:+8801234567890" className="text-accent hover:underline">+880 1234 567 890</a></p>
+          <p>Office: Dhaka, Bangladesh</p>
+        </motion.div>
+      </div>
+    </>
+  );
+};
 
 export default Contact;

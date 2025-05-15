@@ -1,355 +1,166 @@
 import { useForm } from 'react-hook-form';
-import { motion, resolveMotionValue } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet';
 
 const EditBioData = () => {
-    const { user } = useAuth();
-    const axiosSecure = useAxiosSecure();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [count, setCount] = useState();
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        reset,
-        watch,
-        formState: { errors, },
-    } = useForm({
-        defaultValues: {
-            bioDataType: '',
-            name: '',
-            image: '',
-            dob: '',
-            height: '',
-            weight: '',
-            age: '',
-            occupation: '',
-            race: '',
-            fathersName: '',
-            mothersName: '',
-            permanentDivision: '',
-            presentDivision: '',
-            expectedPartnerAge: '',
-            expectedPartnerHeight: '',
-            expectedPartnerWeight: '',
-            contactEmail: user?.email,
-            mobile: ''
-        }
-    });
-    const { data: bioData, isLoading } = useQuery({
-        queryKey: ['bioData'],
-        enabled: !!user?.email,
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/user/get-bio-data/${user?.email}`);
-            setCount(res.data?.count);
-            return res.data?.result;
-        },
-    });
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [count, setCount] = useState();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm();
 
-    const onSubmit = async (data) => {
-        setIsSubmitting(true);
-        const editBioData = {
-            bioDataId: bioData?.bioData?.bioDataId || count + 1,
-            bioDataType: data.bioDataType,
-            name: data.name,
-            image: data.image,
-            dob: data.dob,
-            height: data.height,
-            weight: data.weight,
-            age: data.age,
-            occupation: data.occupation,
-            race: data.race,
-            fathersName: data.fathersName,
-            mothersName: data.mothersName,
-            permanentDivision: data.permanentDivision,
-            presentDivision: data.presentDivision,
-            expectedPartnerAge: data.expectedPartnerAge,
-            expectedPartnerHeight: data.expectedPartnerHeight,
-            expectedPartnerWeight: data.expectedPartnerWeight,
-            contactEmail: data.contactEmail,
-            mobile: data.mobile,
-        };
-        axiosSecure.patch(`/user/bio-data-edit/${user?.email}`, editBioData)
-            .then(res => {
-                // console.log(res.data);
-                if (res.data.matchedCount > 0) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'BioData edited successfully.',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    reset();
-                    setIsSubmitting(false);
-                }
-            })
-            .catch(err => {
-                // console.log(err);
-            });
+  const { data: bioData, isLoading } = useQuery({
+    queryKey: ['bioData'],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/user/get-bio-data/${user?.email}`);
+      setCount(res.data?.count);
+      return res.data?.result;
+    },
+  });
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    const editBioData = {
+      bioDataId: bioData?.bioData?.bioDataId || count + 1,
+      ...data,
     };
-    const divisions = ['Dhaka', 'Chattogram', 'Rangpur', 'Barisal', 'Khulna', 'Maymansign', 'Sylhet',];
-    const heights = ["4'8\"", "5'0\"", "5'4\"", "5'8\"", "6'0\""];
-    const weights = ['45 kg', '50 kg', '55 kg', '60 kg', '70 kg', '80 kg'];
-    const occupations = ['Student', 'Job', 'Housewife', 'Engineer', 'Doctor'];
-    const races = ['Asian', 'Arab', 'African', 'Other'];
+    try {
+      const res = await axiosSecure.patch(`/user/bio-data-edit/${user?.email}`, editBioData);
+      if (res.data.matchedCount > 0) {
+        Swal.fire({
+          icon: 'success',
+          title: 'BioData edited successfully.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        reset();
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    if (isLoading) return <div className=" h-16 border-4 border-dashed rounded-full animate-spin dark:border-rose-500 mx-auto max-w-16"></div>
+  const divisions = ['Dhaka', 'Chattogram', 'Rangpur', 'Barisal', 'Khulna', 'Maymansign', 'Sylhet'];
+  const heights = ["4'8\"", "5'0\"", "5'4\"", "5'8\"", "6'0\""];
+  const weights = ['45 kg', '50 kg', '55 kg', '60 kg', '70 kg', '80 kg'];
+  const occupations = ['Student', 'Job', 'Housewife', 'Engineer', 'Doctor'];
+  const races = ['Asian', 'Arab', 'African', 'Other'];
 
+  if (isLoading) {
     return (
-        <>
-            <Helmet>
-                <title>LuxeMatches | Edit Biodata</title>
-            </Helmet>
-            <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8"
-            >
-                <h2 className="text-2xl font-bold text-rose-600 mb-6">
-                    {watch('biodataId') ? 'Edit Your Biodata' : 'Create Your Biodata'}
-                </h2>
-                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Biodata Type */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Biodata Type *</label>
-                        <select
-                            {...register('bioDataType', { required: 'Select Male or Female' })}
-                            className="w-full border rounded px-3 py-2"
-                            defaultValue={bioData?.bioData?.bioDataType}
-                        >
-                            <option value="">Choose...</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                        {errors.bioDataType && <p className="text-red-500 text-xs">{errors.bioDataType.message}</p>}
-                    </div>
-                    {/* Name */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Name *</label>
-                        <input
-                            type="text"
-                            {...register('name', { required: 'Name required' })}
-                            className="w-full border rounded px-3 py-2"
-                            defaultValue={bioData?.bioData?.name}
-                        />
-                        {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
-                    </div>
-                    {/* Profile Image */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Profile Image URL *</label>
-                        <input
-                            type="url"
-                            defaultValue={bioData?.bioData?.image}
-                            {...register('image', { required: 'Image link required' })}
-                            className="w-full border rounded px-3 py-2"
-                        />
-                        {errors.image && <p className="text-red-500 text-xs">{errors.image.message}</p>}
-                    </div>
-                    {/* Date of Birth */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Date of Birth *</label>
-                        <input
-                            type="date"
-                            {...register('dob', { required: 'Select DOB' })}
-                            className="w-full border rounded px-3 py-2"
-                            defaultValue={bioData?.bioData?.dob}
-                        />
-                        {errors.dob && <p className="text-red-500 text-xs">{errors.dob.message}</p>}
-                    </div>
-                    {/* Height */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Height *</label>
-                        <select
-                            {...register('height', { required: 'Height required' })}
-                            defaultValue={bioData?.bioData?.height}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {heights.map((h) => (
-                                <option key={h}>{h}</option>
-                            ))}
-                        </select>
-                        {errors.height && <p className="text-red-500 text-xs">{errors.height.message}</p>}
-                    </div>
-                    {/* Weight */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Weight *</label>
-                        <select
-                            defaultValue={bioData?.bioData?.weight}
-                            {...register('weight', { required: 'Weight required' })}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {weights.map((w) => (
-                                <option key={w}>{w}</option>
-                            ))}
-                        </select>
-                        {errors.weight && <p className="text-red-500 text-xs">{errors.weight.message}</p>}
-                    </div>
-                    {/* Age */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Age *</label>
-                        <input
-                            defaultValue={bioData?.bioData?.age}
-                            type="number"
-                            {...register('age', { required: 'Age required', min: 18, max: 99 })}
-                            className="w-full border rounded px-3 py-2"
-                        />
-                        {errors.age && <p className="text-red-500 text-xs">{errors.age.message}</p>}
-                    </div>
-                    {/* Occupation */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Occupation *</label>
-                        <select
-                            defaultValue={bioData?.bioData?.occupation}
-                            {...register('occupation', { required: 'Occupation required' })}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {occupations.map((o) => (
-                                <option key={o}>{o}</option>
-                            ))}
-                        </select>
-                        {errors.occupation && <p className="text-red-500 text-xs">{errors.occupation.message}</p>}
-                    </div>
-                    {/* Race */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Race *</label>
-                        <select
-                            defaultValue={bioData?.bioData?.race}
-                            {...register('race', { required: 'Race required' })}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {races.map((r) => (
-                                <option key={r}>{r}</option>
-                            ))}
-                        </select>
-                        {errors.race && <p className="text-red-500 text-xs">{errors.race.message}</p>}
-                    </div>
-                    {/* Fathers & Mothers Names */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Father’s Name *</label>
-                        <input
-                            defaultValue={bioData?.bioData?.fathersName}
-                            type="text"
-                            {...register('fathersName', { required: true })}
-                            className="w-full border rounded px-3 py-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Mother’s Name *</label>
-                        <input
-                            defaultValue={bioData?.bioData?.mothersName}
-                            type="text"
-                            {...register('mothersName', { required: true })}
-                            className="w-full border rounded px-3 py-2"
-                        />
-                    </div>
-                    {/* Divisions */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Permanent Division *</label>
-                        <select
-                            defaultValue={bioData?.bioData?.permanentDivision}
-                            {...register('permanentDivision', { required: true })}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {divisions.map((d) => (
-                                <option key={d}>{d}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Present Division *</label>
-                        <select
-                            defaultValue={bioData?.bioData?.presentDivision}
-                            {...register('presentDivision', { required: true })}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {divisions.map((d) => (
-                                <option key={d}>{d}</option>
-                            ))}
-                        </select>
-                    </div>
-                    {/* Partner Expectations */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Expected Partner Age *</label>
-                        <input
-                            defaultValue={bioData?.bioData?.expectedPartnerAge}
-                            type="text"
-                            {...register('expectedPartnerAge', { required: true })}
-                            placeholder="e.g. 25‑32"
-                            className="w-full border rounded px-3 py-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Expected Partner Height *</label>
-                        <select
-                            defaultValue={bioData?.bioData?.expectedPartnerHeight}
-                            {...register('expectedPartnerHeight', { required: true })}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {heights.map((h) => (
-                                <option key={h}>{h}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Expected Partner Weight *</label>
-                        <select
-                            defaultValue={bioData?.bioData?.expectedPartnerWeight}
-                            {...register('expectedPartnerWeight', { required: true })}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                            <option value="">Choose...</option>
-                            {weights.map((w) => (
-                                <option key={w}>{w}</option>
-                            ))}
-                        </select>
-                    </div>
-                    {/* Contact Email (readonly) */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Your Email (readonly)</label>
-                        <input
-                            type="email"
-                            {...register('contactEmail')}
-                            defaultValue={user?.email}
-                            className="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
-                        />
-                    </div>
-                    {/* Mobile */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Mobile Number *</label>
-                        <input
-                            defaultValue={bioData?.bioData?.mobile}
-                            type="tel"
-                            {...register('mobile', { required: true })}
-                            className="w-full border rounded px-3 py-2"
-                        />
-                    </div>
-                </form>
-                {/* Footer Buttons */}
-                <div className="mt-8 flex justify-end">
-                    <button
-                        onClick={handleSubmit(onSubmit)}
-                        disabled={isSubmitting}
-                        className="bg-rose-600 text-white px-6 py-2 rounded hover:bg-rose-700 disabled:opacity-60 transition"
-                    >
-                        {isSubmitting ? 'Saving…' : 'Save & Publish Now'}
-                    </button>
-                </div>
-            </motion.div>
-        </>
+      <div className="flex justify-center py-16">
+        <div className="h-16 w-16 border-4 border-dashed rounded-full animate-spin border-accent"></div>
+      </div>
     );
-}
+  }
+
+  return (
+    <>
+      <Helmet>
+        <title>LuxeMatches | Edit Biodata</title>
+      </Helmet>
+
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-5xl mx-auto bg-bg-soft p-8 rounded-2xl shadow-xl"
+      >
+        <h2 className="text-3xl font-heading text-primary mb-8">
+          {watch('biodataId') ? 'Edit Your Biodata' : 'Create Your Biodata'}
+        </h2>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6 font-body text-text-main">
+          {[
+            ['Biodata Type', 'bioDataType', 'select', ['Male', 'Female']],
+            ['Name', 'name', 'text'],
+            ['Profile Image URL', 'image', 'url'],
+            ['Date of Birth', 'dob', 'date'],
+            ['Height', 'height', 'select', heights],
+            ['Weight', 'weight', 'select', weights],
+            ['Age', 'age', 'number'],
+            ['Occupation', 'occupation', 'select', occupations],
+            ['Race', 'race', 'select', races],
+            ['Father’s Name', 'fathersName', 'text'],
+            ['Mother’s Name', 'mothersName', 'text'],
+            ['Permanent Division', 'permanentDivision', 'select', divisions],
+            ['Present Division', 'presentDivision', 'select', divisions],
+            ['Expected Partner Age', 'expectedPartnerAge', 'text'],
+            ['Expected Partner Height', 'expectedPartnerHeight', 'select', heights],
+            ['Expected Partner Weight', 'expectedPartnerWeight', 'select', weights],
+            ['Mobile Number', 'mobile', 'tel'],
+          ].map(([label, name, type, options]) => (
+            <div key={name} className="flex flex-col gap-1">
+              <label className="text-sm text-text-secondary">{label} *</label>
+              {type === 'select' ? (
+                <select
+                  {...register(name, { required: true })}
+                  defaultValue={bioData?.bioData?.[name]}
+                  className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  <option value="">Choose...</option>
+                  {options.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={type}
+                  defaultValue={bioData?.bioData?.[name]}
+                  {...register(name, { required: true })}
+                  className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              )}
+              {errors[name] && (
+                <p className="text-xs text-red-500 mt-1">This field is required.</p>
+              )}
+            </div>
+          ))}
+
+          {/* Contact Email - ReadOnly */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-text-secondary">Your Email (readonly)</label>
+            <input
+              type="email"
+              {...register('contactEmail')}
+              defaultValue={user?.email}
+              readOnly
+              className="w-full px-4 py-2 rounded-xl border bg-gray-100 text-gray-500 cursor-not-allowed"
+            />
+          </div>
+        </form>
+
+        {/* Save Button */}
+        <div className="mt-10 flex justify-end">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            disabled={isSubmitting}
+            onClick={handleSubmit(onSubmit)}
+            className="bg-btn text-white font-semibold px-6 py-3 rounded-2xl shadow-md hover:bg-primary transition disabled:opacity-50"
+          >
+            {isSubmitting ? 'Saving…' : 'Save & Publish Now'}
+          </motion.button>
+        </div>
+      </motion.div>
+    </>
+  );
+};
 
 export default EditBioData;
