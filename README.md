@@ -1,4 +1,4 @@
-![LuxeMatches](./assets/luxe-matches-client.vercel.app)
+<img src="https://i.ibb.co/FLWX1H32/luxe-matches-client-vercel-app-5.png" alt="LuxeMatches Home Page">
 
 # 💖 LuxeMatches
 
