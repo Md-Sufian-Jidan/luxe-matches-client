@@ -4,6 +4,7 @@ import PremiumBiodata from "../PremiumBiodata/PremiumBiodata";
 import SuccessCounter from "../SuccessCounter/SuccessCounter";
 import SuccessStories from "../SuccessStories/SuccessStories";
 import HowItWorks from "../HowItWorks/HowItWorks";
+import MembershipPlans from "../MembershipPlans/MembershipPlans";
 
 const Home = () => {
     return (
@@ -15,6 +16,7 @@ const Home = () => {
             <PremiumBiodata />
             <SuccessStories />
             <HowItWorks />
+            <MembershipPlans />
             <SuccessCounter />
         </div>
     );
