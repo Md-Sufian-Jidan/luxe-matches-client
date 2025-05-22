@@ -10,7 +10,7 @@ import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 const SuccessStories = () => {
   const axiosPublic = useAxiosPublic();
 
-  const { data: stories = [], refetch } = useQuery({
+  const { data: stories = [], } = useQuery({
     queryKey: ['stories'],
     queryFn: async () => {
       const res = await axiosPublic.get('/success-stories');
