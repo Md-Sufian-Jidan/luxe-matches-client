@@ -5,6 +5,8 @@ import { Menu, X } from 'lucide-react';
 import clsx from 'clsx';
 import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
+import ThemeToggle from '../../Components/ThemeToggle/ThemeToggle';
+import useRole from '../../Hooks/useCheck';
 
 const navLinks = [
     { name: 'Home', path: '/' },
@@ -26,6 +28,7 @@ const Navbar = () => {
     const { user, logOut } = useAuth();
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen((prev) => !prev);
+    const { isAdmin } = useRole();
     const handleLogout = () => {
         logOut()
             .then(() => {
@@ -63,6 +66,7 @@ const Navbar = () => {
                     <Link to="/" className="text-2xl font-heading text-primary flex items-center gap-3 tracking-wide">
                         💞 <span>LuxeMatches</span>
                     </Link>
+                    <ThemeToggle />
                 </motion.div>
 
                 {/* Desktop Nav Links */}
@@ -96,7 +100,8 @@ const Navbar = () => {
 
                     <motion.div whileHover={{ scale: 1.1 }}>
                         {user ? (
-                            <NavLink to="/dashboard"
+                            <NavLink
+                                to={`${isAdmin ? '/dashboard/admin' : '/dashboard/edit-bio-data'}`}
                                 className={({ isActive }) =>
                                     clsx(
                                         'text-text-main font-medium text-lg hover:text-accent transition-colors duration-300',

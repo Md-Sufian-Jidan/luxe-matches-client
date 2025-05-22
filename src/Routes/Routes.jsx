@@ -67,6 +67,7 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         element: <PrivateRoute><Dashboard /></PrivateRoute>,
         children: [
+            // user routes
             {
                 path: '/dashboard/edit-bio-data',
                 element: <PrivateRoute><EditBioData /></PrivateRoute>

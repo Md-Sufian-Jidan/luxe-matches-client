@@ -1,6 +1,8 @@
+![LuxeMatches](./assets/luxe-matches-client.vercel.app)
+
 # 💖 LuxeMatches
 
-![LuxeMatches Logo](https://i.ibb.co/mrtbLH2j/luxe-logo.png)
+<img src="https://i.ibb.co/mrtbLH2j/luxe-logo.png" alt="LuxeMatches Logo">
 
 > A premium matchmaking experience tailored for individuals seeking meaningful and lasting connections.
 
@@ -25,10 +27,6 @@
 ![TanStack Query](https://img.shields.io/badge/React--Query-5.74.4-FF4154?style=flat&logo=react-query)  
 
 And more: `Zod`, `SweetAlert2`, `Recharts`, `Swiper`, `Lucide`, `Axios`, `LocalForage`, `React Toastify`, `PropTypes`, `Clsx`, etc.
-
----
-
-| ![Home](https://i.ibb.co/FLWX1H32/luxe-matches-client-vercel-app-5.png) 
 
 ---
 
