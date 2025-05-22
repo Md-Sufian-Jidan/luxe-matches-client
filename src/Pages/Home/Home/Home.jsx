@@ -5,6 +5,8 @@ import SuccessCounter from "../SuccessCounter/SuccessCounter";
 import SuccessStories from "../SuccessStories/SuccessStories";
 import HowItWorks from "../HowItWorks/HowItWorks";
 import MembershipPlans from "../MembershipPlans/MembershipPlans";
+import BlogAdviceSection from "../BlogAdviceSection/BlogAdviceSection";
+import NewsletterSignup from "../NewsletterSignup/NewsletterSignup";
 
 const Home = () => {
     return (
@@ -17,6 +19,8 @@ const Home = () => {
             <SuccessStories />
             <HowItWorks />
             <MembershipPlans />
+            <BlogAdviceSection />
+            <NewsletterSignup />
             <SuccessCounter />
         </div>
     );
