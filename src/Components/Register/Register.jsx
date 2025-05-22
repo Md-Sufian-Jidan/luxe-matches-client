@@ -125,19 +125,19 @@ const Register = () => {
       <Helmet>
         <title>LuxeMatches | Register</title>
       </Helmet>
-      <div className="min-h-screen flex items-center justify-center bg-bg-soft px-4 py-12">
+      <div className="min-h-screen flex items-center justify-center bg-bg-soft dark:bg-gray-900 px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full max-w-md bg-white rounded-2xl shadow-lg p-10"
+          className="w-full max-w-md bg-white dark:bg-bg-soft rounded-2xl shadow-lg p-10"
         >
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="text-center mb-8"
           >
-            <Link to="/" className="inline-flex justify-center items-center gap-2 text-primary font-heading text-3xl font-bold select-none">
+            <Link to="/" className="inline-flex justify-center items-center gap-2 text-primary dark:text-accent font-heading text-3xl font-bold select-none">
               💍 <span className="font-serif">LuxeMatches</span>
             </Link>
             <p className="mt-2 text-text-secondary font-body text-sm">
@@ -155,7 +155,7 @@ const Register = () => {
                 type="text"
                 {...register('name', { required: 'Name is required' })}
                 className={clsx(
-                  'w-full rounded-2xl border border-gray-300 px-4 py-3 text-text-main font-body placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition',
+                  'w-full rounded-2xl border border-gray-300 px-4 py-3 text-text-main dark:text-text-secondary font-body placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition',
                   errors.name && 'border-red-500'
                 )}
                 placeholder="Your full name"
@@ -173,7 +173,7 @@ const Register = () => {
                 type="email"
                 {...register('email', { required: 'Email is required' })}
                 className={clsx(
-                  'w-full rounded-2xl border border-gray-300 px-4 py-3 text-text-main font-body placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition',
+                  'w-full rounded-2xl border border-gray-300 px-4 py-3 text-text-main dark:text-text-secondary font-body placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition',
                   errors.email && 'border-red-500'
                 )}
                 placeholder="you@example.com"
@@ -194,7 +194,7 @@ const Register = () => {
                 onPaste={(e) => e.preventDefault()}
                 onCopy={(e) => e.preventDefault()}
                 className={clsx(
-                  'w-full rounded-2xl border border-gray-300 px-4 py-3 text-text-main font-body placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition',
+                  'w-full rounded-2xl border border-gray-300 px-4 py-3 text-text-main dark:text-text-secondary font-body placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition',
                   errors.password && 'border-red-500'
                 )}
                 placeholder="Create a strong password"
@@ -220,7 +220,7 @@ const Register = () => {
                 {...register('photo', { required: 'Photo is required' })}
                 onChange={handleImageChange}
                 className={clsx(
-                  'w-full text-text-main font-body',
+                  'w-full text-text-main dark:text-text-secondary font-body',
                   errors.photo && 'border-red-500'
                 )}
               />

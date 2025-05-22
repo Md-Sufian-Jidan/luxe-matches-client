@@ -63,10 +63,10 @@ const Dashboard = () => {
             animate={{ x: 0 }}
             exit={{ x: -300 }}
             transition={{ duration: 0.3 }}
-            className="w-64 bg-white shadow-lg md:static fixed z-50 top-0 left-0 h-[100vh] p-6 rounded-r-2xl font-body"
+            className="w-64 bg-white dark:bg-bg-soft shadow-lg md:static fixed z-50 top-0 left-0 h-[100vh] p-6 rounded-r-2xl font-body"
           >
             <div className="mb-6">
-              <Link to="/" className="text-2xl font-heading text-primary block">LuxeMatches</Link>
+              <Link to="/" className="text-2xl font-heading text-primary dark:text-accent block">LuxeMatches</Link>
             </div>
 
             <nav className="flex flex-col gap-2">
@@ -75,10 +75,9 @@ const Dashboard = () => {
                   key={item.to}
                   to={item.to}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-2 rounded-2xl transition-colors duration-200 text-sm ${
-                      isActive
-                        ? 'bg-accent/10 text-primary font-semibold'
-                        : 'text-text-secondary hover:bg-bg-soft hover:text-primary'
+                    `flex items-center gap-3 px-4 py-2 rounded-2xl transition-colors duration-200 text-sm ${isActive
+                      ? 'bg-accent/10 text-primary dark:text-text-secondary font-semibold'
+                      : 'text-text-secondary hover:bg-bg-soft hover:text-primary'
                     }`
                   }
                   onClick={() => setSidebarOpen(false)}
@@ -105,7 +104,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="rounded-2xl bg-white shadow p-4 md:p-6"
+          className="rounded-2xl bg-white dark:bg-bg-soft shadow p-4 md:p-6"
         >
           <Outlet />
         </motion.div>

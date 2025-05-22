@@ -16,34 +16,34 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="bg-bg-soft border-t border-accent/30 py-12 mt-20"
+            className="bg-bg-soft dark:bg-gray-900 border-t border-accent/30 dark:border-white/10 py-12 transition-colors duration-300"
         >
-            <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12 text-text-main font-body">
+            <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12 text-text-main dark:text-white font-body">
                 {/* Logo & Tagline */}
                 <div>
-                    <Link to="/" className="text-2xl font-heading text-primary flex items-center gap-2">
+                    <Link to="/" className="text-2xl font-heading text-primary dark:text-accent flex items-center gap-2">
                         💞 <span>LuxeMatches</span>
                     </Link>
-                    <p className="text-sm text-text-secondary mt-3 leading-relaxed max-w-sm">
+                    <p className="text-sm text-text-secondary dark:text-gray-400 mt-3 leading-relaxed max-w-sm">
                         Helping hearts meet and lives unite. A premium Bengali matrimony platform for meaningful connections.
                     </p>
                 </div>
 
                 {/* Quick Links */}
                 <div>
-                    <h3 className="text-xl font-heading text-primary mb-3">Quick Links</h3>
+                    <h3 className="text-xl font-heading text-primary dark:text-accent mb-3">Quick Links</h3>
                     <ul className="space-y-2 text-base">
-                        <li><Link to="/about" className="hover:text-accent transition">About Us</Link></li>
-                        <li><Link to="/contact" className="hover:text-accent transition">Contact</Link></li>
-                        <li><Link to="/biodatas" className="hover:text-accent transition">Browse Biodatas</Link></li>
-                        <li><Link to="/login" className="hover:text-accent transition">Login</Link></li>
+                        <li><Link to="/about" className="hover:text-accent dark:hover:text-white transition">About Us</Link></li>
+                        <li><Link to="/contact" className="hover:text-accent dark:hover:text-white transition">Contact</Link></li>
+                        <li><Link to="/biodatas" className="hover:text-accent dark:hover:text-white transition">Browse Biodatas</Link></li>
+                        <li><Link to="/login" className="hover:text-accent dark:hover:text-white transition">Login</Link></li>
                     </ul>
                 </div>
 
                 {/* Social Links */}
                 <div>
-                    <h3 className="text-xl font-heading text-primary mb-3">Stay Connected</h3>
-                    <div className="flex space-x-5 text-primary">
+                    <h3 className="text-xl font-heading text-primary dark:text-accent mb-3">Stay Connected</h3>
+                    <div className="flex space-x-5 text-primary dark:text-accent">
                         {socials.map((social, i) => (
                             <motion.a
                                 key={i}
@@ -52,13 +52,13 @@ const Footer = () => {
                                 rel="noopener noreferrer"
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="hover:text-accent transition"
+                                className="hover:text-accent dark:hover:text-white transition"
                             >
                                 {social.icon}
                             </motion.a>
                         ))}
                     </div>
-                    <p className="text-xs text-text-secondary mt-6">
+                    <p className="text-xs text-text-secondary dark:text-gray-400 mt-6">
                         &copy; {new Date().getFullYear()} LuxeMatches. All rights reserved.
                     </p>
                 </div>

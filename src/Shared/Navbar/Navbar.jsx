@@ -1,11 +1,10 @@
 import { Link, NavLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import clsx from 'clsx';
 import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
-import ThemeToggle from '../../Components/ThemeToggle/ThemeToggle';
 import useRole from '../../Hooks/useCheck';
 
 const navLinks = [
@@ -27,8 +26,30 @@ const linkVariants = {
 const Navbar = () => {
     const { user, logOut } = useAuth();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [darkMode, setDarkMode] = useState(() => {
+        // Initialize from localStorage or system preference
+        if (typeof window !== "undefined") {
+            if (localStorage.theme) {
+                return localStorage.theme === 'dark';
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        return false;
+    });
+
+    useEffect(() => {
+        if (darkMode) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [darkMode]);
+
     const toggleMenu = () => setMenuOpen((prev) => !prev);
     const { isAdmin } = useRole();
+
     const handleLogout = () => {
         logOut()
             .then(() => {
@@ -54,7 +75,7 @@ const Navbar = () => {
             initial={{ y: -60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 70 }}
-            className="bg-bg-soft shadow-md sticky top-0 z-50"
+            className="bg-bg-soft dark:bg-gray-900 shadow-md sticky top-0 z-50 transition-colors duration-300"
         >
             <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
                 {/* Logo with animation */}
@@ -63,14 +84,13 @@ const Navbar = () => {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <Link to="/" className="text-2xl font-heading text-primary flex items-center gap-3 tracking-wide">
+                    <Link to="/" className="text-2xl font-heading text-primary dark:text-accent flex items-center gap-3 tracking-wide">
                         💞 <span>LuxeMatches</span>
                     </Link>
-                    <ThemeToggle />
                 </motion.div>
 
                 {/* Desktop Nav Links */}
-                <div className="hidden md:flex items-center gap-10">
+                <div className="hidden md:flex items-center gap-8">
                     {navLinks.map(({ name, path }, i) => (
                         <motion.div
                             key={name}
@@ -82,11 +102,11 @@ const Navbar = () => {
                             <NavLink
                                 to={path}
                                 className={({ isActive }) =>
-                                    clsx(
-                                        'relative text-text-main font-medium text-lg transition-colors duration-300 hover:text-accent',
-                                        isActive && 'text-primary font-semibold'
-                                    )
+                                    isActive ?
+                                        'text-primary dark:text-accent font-semibold' :
+                                        'relative font-medium text-lg transition-colors duration-300 hover:text-accent text-text-main dark:text-gray-300'
                                 }
+
                             >
                                 {name}
                                 <motion.span
@@ -104,8 +124,9 @@ const Navbar = () => {
                                 to={`${isAdmin ? '/dashboard/admin' : '/dashboard/edit-bio-data'}`}
                                 className={({ isActive }) =>
                                     clsx(
-                                        'text-text-main font-medium text-lg hover:text-accent transition-colors duration-300',
-                                        isActive && 'text-primary font-semibold'
+                                        'font-medium text-lg transition-colors duration-300 hover:text-accent',
+                                        'text-text-main dark:text-gray-300',
+                                        isActive && 'text-primary dark:text-accent font-semibold'
                                     )
                                 }>
                                 Dashboard
@@ -128,10 +149,21 @@ const Navbar = () => {
                             Logout
                         </motion.button>
                     )}
+
+                    {/* Dark Mode Toggle */}
+                    <motion.button
+                        onClick={() => setDarkMode(!darkMode)}
+                        whileTap={{ scale: 0.9 }}
+                        aria-label="Toggle Dark Mode"
+                        className="text-primary dark:text-accent focus:outline-none"
+                        title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    >
+                        {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+                    </motion.button>
                 </div>
 
                 {/* Mobile Toggle */}
-                <button className="md:hidden text-primary" onClick={toggleMenu} aria-label="Toggle menu">
+                <button className="md:hidden text-primary dark:text-accent" onClick={toggleMenu} aria-label="Toggle menu">
                     {menuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
             </div>
@@ -143,7 +175,7 @@ const Navbar = () => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="md:hidden bg-bg-soft shadow-inner"
+                        className="md:hidden bg-bg-soft dark:bg-gray-900 shadow-inner transition-colors duration-300"
                     >
                         <div className="flex flex-col px-8 py-6 space-y-6">
                             {navLinks.map(({ name, path }, i) => (
@@ -159,10 +191,9 @@ const Navbar = () => {
                                         to={path}
                                         onClick={toggleMenu}
                                         className={({ isActive }) =>
-                                            clsx(
-                                                'text-text-main font-medium text-lg hover:text-accent transition-colors duration-300',
-                                                isActive && 'text-primary font-semibold'
-                                            )
+                                            isActive ?
+                                                'text-primary dark:text-accent font-semibold' :
+                                                'relative font-medium text-lg transition-colors duration-300 hover:text-accent text-text-main dark:text-gray-300'
                                         }
                                     >
                                         {name}
@@ -173,12 +204,13 @@ const Navbar = () => {
                             <motion.div whileHover={{ scale: 1.05 }}>
                                 {user ? (
                                     <NavLink
-                                        to="/dashboard"
+                                        to={`${isAdmin ? '/dashboard/admin' : '/dashboard/edit-bio-data'}`}
                                         onClick={toggleMenu}
                                         className={({ isActive }) =>
                                             clsx(
-                                                'text-text-main font-medium text-lg hover:text-accent transition-colors duration-300',
-                                                isActive && 'text-primary font-semibold'
+                                                'font-medium text-lg hover:text-accent transition-colors duration-300',
+                                                'text-text-main dark:text-gray-300',
+                                                isActive && 'text-primary dark:text-accent font-semibold'
                                             )
                                         }
                                     >
@@ -194,6 +226,20 @@ const Navbar = () => {
                                     </Link>
                                 )}
                             </motion.div>
+
+                            {/* Mobile dark mode toggle */}
+                            <motion.button
+                                onClick={() => {
+                                    setDarkMode(!darkMode);
+                                    toggleMenu();
+                                }}
+                                whileTap={{ scale: 0.9 }}
+                                aria-label="Toggle Dark Mode"
+                                className="flex justify-center text-primary dark:text-accent focus:outline-none"
+                                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                            >
+                                {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+                            </motion.button>
                         </div>
                     </motion.div>
                 )}

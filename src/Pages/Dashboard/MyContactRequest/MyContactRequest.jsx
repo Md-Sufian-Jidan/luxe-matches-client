@@ -49,11 +49,13 @@ const MyContactRequest = () => {
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 font-body space-y-8">
-        <h1 className="text-3xl font-heading text-primary">My Contact Requests</h1>
+        <h1 className="text-3xl font-heading text-primary dark:text-primary">
+          My Contact Requests
+        </h1>
 
-        <div className="overflow-x-auto bg-bg-soft rounded-2xl shadow-lg">
-          <table className="min-w-full text-text-main text-sm md:text-base">
-            <thead className="bg-primary bg-opacity-10 font-heading text-text-secondary">
+        <div className="overflow-x-auto bg-bg-soft dark:bg-gray-900 rounded-2xl shadow-lg dark:shadow-xl">
+          <table className="min-w-full text-text-main dark:text-text-secondary text-sm md:text-base">
+            <thead className="bg-primary bg-opacity-10 dark:bg-primary dark:bg-opacity-20 font-heading text-text-secondary dark:text-accent">
               <tr>
                 {[
                   'Name',
@@ -61,7 +63,7 @@ const MyContactRequest = () => {
                   'Status',
                   'Mobile No',
                   'Email',
-                  'Action'
+                  'Action',
                 ].map((heading) => (
                   <th key={heading} className="px-6 py-3 text-left tracking-wide">
                     {heading}
@@ -74,13 +76,19 @@ const MyContactRequest = () => {
               <AnimatePresence>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={6} className="py-10 text-center text-text-secondary italic">
+                    <td
+                      colSpan={6}
+                      className="py-10 text-center text-text-secondary dark:text-text-secondary italic"
+                    >
                       Loading…
                     </td>
                   </tr>
                 ) : requests.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-10 text-center text-text-secondary italic">
+                    <td
+                      colSpan={6}
+                      className="py-10 text-center text-text-secondary dark:text-text-secondary italic"
+                    >
                       No contact requests yet.
                     </td>
                   </tr>
@@ -92,17 +100,23 @@ const MyContactRequest = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3 }}
-                      className="border-b border-gray-200 last:border-0 hover:bg-bg-soft transition-colors"
+                      className="border-b border-gray-200 dark:border-gray-700 last:border-0 hover:bg-bg-soft dark:hover:bg-gray-800 transition-colors"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">{req.requestedName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-accent font-semibold">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {req.requestedName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap font-semibold">
                         #{req.bioDataId}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap font-medium">
                         {req.approved ? (
-                          <span className="text-emerald-600">Approved</span>
+                          <span>
+                            Approved
+                          </span>
                         ) : (
-                          <span className="text-yellow-500">Pending</span>
+                          <span className="text-yellow-500 dark:text-yellow-400">
+                            Pending
+                          </span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -114,7 +128,7 @@ const MyContactRequest = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => handleDelete(req._id)}
-                          className="text-xs md:text-sm bg-btn hover:bg-primary text-white font-semibold px-4 py-1.5 rounded-2xl shadow-sm transition-colors"
+                          className="text-xs md:text-sm bg-btn dark:bg-btn hover:bg-primary dark:hover:bg-primary text-white font-semibold px-4 py-1.5 rounded-2xl shadow-sm dark:shadow-md transition-colors"
                           aria-label={`Delete contact request for ${req.requestedName}`}
                         >
                           Delete

@@ -55,16 +55,18 @@ const MyFavourites = () => {
       </Helmet>
 
       <div className="space-y-8 max-w-6xl mx-auto px-4 sm:px-6 py-6 font-body">
-        <h1 className="text-3xl font-heading text-primary mb-6">My Favourites</h1>
+        <h1 className="text-3xl font-heading text-primary dark:text-primary mb-6">
+          My Favourites
+        </h1>
 
-        <div className="overflow-x-auto bg-bg-soft rounded-2xl shadow-lg">
-          <table className="min-w-full text-text-main text-sm md:text-base">
-            <thead className="bg-primary bg-opacity-10">
+        <div className="overflow-x-auto bg-bg-soft dark:bg-gray-900 rounded-2xl shadow-lg dark:shadow-xl">
+          <table className="min-w-full text-text-main dark:text-text-secondary text-sm md:text-base">
+            <thead className="bg-primary bg-opacity-10 dark:bg-primary dark:bg-opacity-20">
               <tr>
                 {['Name', 'Biodata ID', 'Permanent Address', 'Occupation', 'Action'].map((th) => (
                   <th
                     key={th}
-                    className="px-6 py-3 text-left font-heading text-text-secondary tracking-wide"
+                    className="px-6 py-3 text-left font-heading text-text-secondary dark:text-accent tracking-wide"
                   >
                     {th}
                   </th>
@@ -76,13 +78,19 @@ const MyFavourites = () => {
               <AnimatePresence>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={5} className="py-10 text-center text-text-secondary italic">
+                    <td
+                      colSpan={5}
+                      className="py-10 text-center text-text-secondary dark:text-text-secondary italic"
+                    >
                       Loading…
                     </td>
                   </tr>
                 ) : favourites.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-10 text-center text-text-secondary italic">
+                    <td
+                      colSpan={5}
+                      className="py-10 text-center text-text-secondary dark:text-text-secondary italic"
+                    >
                       No favourites added yet.
                     </td>
                   </tr>
@@ -94,10 +102,10 @@ const MyFavourites = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.25 }}
-                      className="border-b border-gray-200 last:border-0 hover:bg-bg-soft transition-colors"
+                      className="border-b border-gray-200 dark:border-gray-700 last:border-0 hover:bg-bg-soft dark:hover:bg-gray-800 transition-colors"
                     >
                       <td className="px-6 py-4 whitespace-nowrap">{f?.bio.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-accent font-semibold">
+                      <td className="px-6 py-4 whitespace-nowrap font-semibold">
                         #{f.bio?.bioData.bioDataId}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">{f.bio.bioData?.permanentDivision}</td>
@@ -105,7 +113,7 @@ const MyFavourites = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => handleDelete(f._id)}
-                          className="text-xs md:text-sm bg-btn hover:bg-primary transition-colors text-white font-medium px-4 py-1.5 rounded-2xl shadow-sm"
+                          className="text-xs md:text-sm bg-btn dark:bg-btn hover:bg-primary dark:hover:bg-primary transition-colors text-white font-medium px-4 py-1.5 rounded-2xl shadow-sm dark:shadow-md"
                           aria-label={`Delete favourite biodata ${f?.bio.name}`}
                         >
                           Delete

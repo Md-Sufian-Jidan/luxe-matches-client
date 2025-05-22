@@ -57,11 +57,13 @@ const ApprovePremium = () => {
         transition={{ duration: 0.4 }}
         className="space-y-8 font-body"
       >
-        <h1 className="text-3xl font-heading text-primary">Premium Approval Requests</h1>
+        <h1 className="text-3xl font-heading text-primary dark:text-primary">
+          Premium Approval Requests
+        </h1>
 
-        <div className="overflow-x-auto bg-white rounded-2xl shadow p-4">
-          <table className="min-w-full text-sm text-text-main">
-            <thead className="bg-bg-soft text-left text-text-secondary font-heading">
+        <div className="overflow-x-auto bg-white dark:bg-bg-soft rounded-2xl shadow dark:shadow-md p-4">
+          <table className="min-w-full text-sm text-text-main dark:text-text-main">
+            <thead className="bg-bg-soft dark:bg-gray-800 text-left text-text-secondary dark:text-accent font-heading">
               <tr>
                 {['Name', 'Email', 'Biodata ID', 'Action'].map((h) => (
                   <th key={h} className="px-6 py-3">{h}</th>
@@ -72,13 +74,13 @@ const ApprovePremium = () => {
               <AnimatePresence>
                 {loading ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary">
+                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary dark:text-text-secondary">
                       Loading…
                     </td>
                   </tr>
                 ) : requests.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary">
+                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary dark:text-text-secondary">
                       No pending requests
                     </td>
                   </tr>
@@ -89,17 +91,17 @@ const ApprovePremium = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="border-t hover:bg-bg-soft transition-colors"
+                      className="border-t border-gray-200 dark:border-gray-700 hover:bg-bg-soft dark:hover:bg-gray-700 transition-colors"
                     >
                       <td className="px-6 py-3">{r.name}</td>
                       <td className="px-6 py-3">{r.email}</td>
-                      <td className="px-6 py-3 font-medium text-primary">
+                      <td className="px-6 py-3 font-medium text-primary dark:text-primary">
                         #{r.bioData?.bioDataId}
                       </td>
                       <td className="px-6 py-3">
                         <button
                           onClick={() => approve(r)}
-                          className="px-4 py-1.5 text-xs font-medium bg-accent text-white rounded-xl hover:brightness-90 transition-all"
+                          className="px-4 py-1.5 text-xs font-medium bg-accent dark:bg-accent text-white rounded-xl hover:brightness-90 transition-all"
                         >
                           Approve Premium
                         </button>

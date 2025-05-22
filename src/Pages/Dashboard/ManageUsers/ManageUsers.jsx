@@ -62,22 +62,22 @@ const ManageUsers = () => {
       >
         {/* Search Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h2 className="text-2xl font-heading text-primary">Manage Users</h2>
+          <h2 className="text-2xl font-heading text-primary dark:text-primary">Manage Users</h2>
           <input
             type="text"
             placeholder="Search by username…"
             value={query}
             onChange={onSearch}
-            className="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full sm:w-64 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm text-sm text-text-main dark:text-text-main bg-white dark:bg-bg-soft placeholder:text-text-secondary dark:placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent"
           />
         </div>
 
         {/* User Table */}
-        <div className="overflow-x-auto bg-white rounded-2xl shadow">
-          <table className="min-w-full text-sm text-left text-text-main whitespace-nowrap">
-            <thead className="bg-bg-soft font-heading text-text-secondary">
+        <div className="overflow-x-auto bg-white dark:bg-bg-soft rounded-2xl shadow dark:shadow-md">
+          <table className="min-w-full text-sm text-left text-text-main dark:text-text-main whitespace-nowrap">
+            <thead className="bg-bg-soft dark:bg-gray-800 font-heading text-text-secondary dark:text-accent">
               <tr>
-                {['Username', 'Email', 'Admin', 'Premium', 'Actions'].map(h => (
+                {['Username', 'Email', 'Admin', 'Premium', 'Actions'].map((h) => (
                   <th key={h} className="px-6 py-4">{h}</th>
                 ))}
               </tr>
@@ -86,11 +86,15 @@ const ManageUsers = () => {
               <AnimatePresence>
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-text-secondary">Loading…</td>
+                    <td colSpan={5} className="px-6 py-8 text-center text-text-secondary dark:text-text-secondary">
+                      Loading…
+                    </td>
                   </tr>
                 ) : users?.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-text-secondary">No users found.</td>
+                    <td colSpan={5} className="px-6 py-8 text-center text-text-secondary dark:text-text-secondary">
+                      No users found.
+                    </td>
                   </tr>
                 ) : (
                   users.map((u) => (
@@ -99,7 +103,7 @@ const ManageUsers = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="border-t"
+                      className="border-t border-gray-200 dark:border-gray-700"
                     >
                       <td className="px-6 py-4">{u.name}</td>
                       <td className="px-6 py-4">{u.email}</td>
@@ -109,7 +113,7 @@ const ManageUsers = () => {
                         {!u.isAdmin && (
                           <button
                             onClick={() => toggleRole(u._id, 'isAdmin')}
-                            className="px-3 py-1.5 text-xs rounded-xl bg-btn text-white hover:bg-primary transition-all"
+                            className="px-3 py-1.5 text-xs rounded-xl bg-btn dark:bg-btn text-white hover:bg-primary dark:hover:bg-primary transition-all"
                           >
                             Make Admin
                           </button>
@@ -117,7 +121,7 @@ const ManageUsers = () => {
                         {!u.isPremium && (
                           <button
                             onClick={() => toggleRole(u._id, 'isPremium')}
-                            className="px-3 py-1.5 text-xs rounded-xl bg-accent text-white hover:brightness-90 transition-all"
+                            className="px-3 py-1.5 text-xs rounded-xl bg-accent dark:bg-accent text-white hover:brightness-90 transition-all"
                           >
                             Make Premium
                           </button>
@@ -135,16 +139,16 @@ const ManageUsers = () => {
         <div className="flex justify-center items-center gap-3 mt-4 text-sm">
           <button
             disabled={page === 1}
-            onClick={() => setPage(p => p - 1)}
-            className="px-3 py-1.5 border rounded-xl text-text-main disabled:opacity-40 hover:bg-bg-soft"
+            onClick={() => setPage((p) => p - 1)}
+            className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-xl text-text-main dark:text-text-main disabled:opacity-40 hover:bg-bg-soft dark:hover:bg-gray-700"
           >
             Prev
           </button>
-          <span className="text-text-secondary">{page}</span>
+          <span className="text-text-secondary dark:text-text-secondary">{page}</span>
           <button
             disabled={users.length < perPage}
-            onClick={() => setPage(p => p + 1)}
-            className="px-3 py-1.5 border rounded-xl text-text-main disabled:opacity-40 hover:bg-bg-soft"
+            onClick={() => setPage((p) => p + 1)}
+            className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-xl text-text-main dark:text-text-main disabled:opacity-40 hover:bg-bg-soft dark:hover:bg-gray-700"
           >
             Next
           </button>

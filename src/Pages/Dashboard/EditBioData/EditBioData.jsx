@@ -78,13 +78,16 @@ const EditBioData = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-5xl mx-auto bg-bg-soft p-8 rounded-2xl shadow-xl"
+        className="max-w-5xl mx-auto bg-white dark:bg-bg-soft p-8 rounded-2xl shadow-xl dark:shadow-lg"
       >
-        <h2 className="text-3xl font-heading text-primary mb-8">
+        <h2 className="text-3xl font-heading text-primary dark:text-primary mb-8">
           {watch('biodataId') ? 'Edit Your Biodata' : 'Create Your Biodata'}
         </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6 font-body text-text-main">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 font-body text-text-main dark:text-text-main"
+        >
           {[
             ['Biodata Type', 'bioDataType', 'select', ['Male', 'Female']],
             ['Name', 'name', 'text'],
@@ -105,12 +108,12 @@ const EditBioData = () => {
             ['Mobile Number', 'mobile', 'tel'],
           ].map(([label, name, type, options]) => (
             <div key={name} className="flex flex-col gap-1">
-              <label className="text-sm text-text-secondary">{label} *</label>
+              <label className="text-sm text-text-secondary dark:text-text-secondary">{label} *</label>
               {type === 'select' ? (
                 <select
                   {...register(name, { required: true })}
                   defaultValue={bioData?.bioData?.[name]}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-text-main dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-accent"
                 >
                   <option value="">Choose...</option>
                   {options.map((opt) => (
@@ -124,7 +127,7 @@ const EditBioData = () => {
                   type={type}
                   defaultValue={bioData?.bioData?.[name]}
                   {...register(name, { required: true })}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-secondary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-accent"
                 />
               )}
               {errors[name] && (
@@ -135,13 +138,13 @@ const EditBioData = () => {
 
           {/* Contact Email - ReadOnly */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-text-secondary">Your Email (readonly)</label>
+            <label className="text-sm text-text-secondary dark:text-text-secondary">Your Email (readonly)</label>
             <input
               type="email"
               {...register('contactEmail')}
               defaultValue={user?.email}
               readOnly
-              className="w-full px-4 py-2 rounded-xl border bg-gray-100 text-gray-500 cursor-not-allowed"
+              className="w-full px-4 py-2 rounded-xl border bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
             />
           </div>
         </form>
@@ -153,7 +156,7 @@ const EditBioData = () => {
             whileTap={{ scale: 0.97 }}
             disabled={isSubmitting}
             onClick={handleSubmit(onSubmit)}
-            className="bg-btn text-white font-semibold px-6 py-3 rounded-2xl shadow-md hover:bg-primary transition disabled:opacity-50"
+            className="bg-btn dark:bg-btn text-white font-semibold px-6 py-3 rounded-2xl shadow-md dark:shadow-lg hover:bg-primary dark:hover:bg-primary transition disabled:opacity-50"
           >
             {isSubmitting ? 'Saving…' : 'Save & Publish Now'}
           </motion.button>

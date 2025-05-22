@@ -58,11 +58,13 @@ const ApprovedContactRequest = () => {
         transition={{ duration: 0.4 }}
         className="space-y-8 font-body"
       >
-        <h1 className="text-3xl font-heading text-primary">Contact Request Approvals</h1>
+        <h1 className="text-3xl font-heading text-primary dark:text-primary">
+          Contact Request Approvals
+        </h1>
 
-        <div className="overflow-x-auto bg-white rounded-2xl shadow p-4">
-          <table className="min-w-full text-sm text-text-main">
-            <thead className="bg-bg-soft text-left font-heading text-text-secondary">
+        <div className="overflow-x-auto bg-white dark:bg-bg-soft rounded-2xl shadow dark:shadow-md p-4">
+          <table className="min-w-full text-sm text-text-main dark:text-text-main">
+            <thead className="bg-bg-soft dark:bg-gray-800 text-left font-heading text-text-secondary dark:text-accent">
               <tr>
                 {['Name', 'Email', 'Biodata ID', 'Action'].map((header) => (
                   <th key={header} className="px-6 py-3">{header}</th>
@@ -74,13 +76,13 @@ const ApprovedContactRequest = () => {
               <AnimatePresence>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary">
+                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary dark:text-text-secondary">
                       Loading…
                     </td>
                   </tr>
                 ) : filterApprove?.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary">
+                    <td colSpan={4} className="px-6 py-6 text-center text-text-secondary dark:text-text-secondary">
                       No pending requests
                     </td>
                   </tr>
@@ -91,17 +93,17 @@ const ApprovedContactRequest = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="border-t hover:bg-bg-soft transition-colors"
+                      className="border-t border-gray-200 dark:border-gray-700 hover:bg-bg-soft dark:hover:bg-gray-700 transition-colors"
                     >
                       <td className="px-6 py-3">{r?.requesterName}</td>
                       <td className="px-6 py-3">{r?.requesterEmail}</td>
-                      <td className="px-6 py-3 text-primary font-medium">
+                      <td className="px-6 py-3 text-primary dark:text-primary font-medium">
                         #{r?.bioDataId}
                       </td>
                       <td className="px-6 py-3">
                         <button
                           onClick={() => handleApprove(r._id)}
-                          className="px-4 py-1.5 text-xs font-medium bg-accent text-white rounded-xl hover:brightness-90 transition-all"
+                          className="px-4 py-1.5 text-xs font-medium bg-accent dark:bg-accent text-white rounded-xl hover:brightness-90 transition-all"
                         >
                           Approve Contact
                         </button>

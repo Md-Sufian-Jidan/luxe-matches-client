@@ -45,17 +45,17 @@ const BioDatas = () => {
         <title>LuxeMatches | Biodatas</title>
       </Helmet>
 
-      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 font-body">
+      <div className="bg-bg-soft dark:bg-gray-900 px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 font-body">
         {/* Filters Sidebar */}
-        <div className="bg-white rounded-2xl shadow-md p-6 h-fit md:sticky md:top-24">
-          <h3 className="text-xl font-heading text-primary mb-6">Filters</h3>
+        <div className="bg-white dark:bg-bg-soft rounded-2xl shadow-md dark:shadow-lg p-6 h-fit md:sticky md:top-24 transition-colors duration-300">
+          <h3 className="text-xl font-heading text-primary dark:text-accent mb-6">Filters</h3>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-text-main mb-2">Biodata Type</label>
+            <label className="block text-sm font-medium text-text-main dark:text-text-secondary mb-2">Biodata Type</label>
             <select
               value={genderFilter}
               onChange={(e) => setGenderFilter(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 text-sm text-text-secondary"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 text-sm text-text-secondary dark:text-text-secondary bg-white dark:bg-gray-800 transition-colors duration-300"
             >
               <option value="">All</option>
               <option value="Male">Male</option>
@@ -64,11 +64,11 @@ const BioDatas = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-text-main mb-2">Division</label>
+            <label className="block text-sm font-medium text-text-main dark:text-text-secondary mb-2">Division</label>
             <select
               value={divisionFilter}
               onChange={(e) => setDivisionFilter(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 text-sm text-text-secondary"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 text-sm text-text-secondary dark:text-text-secondary bg-white dark:bg-gray-800 transition-colors duration-300"
             >
               <option value="">All</option>
               {divisions.map((d) => (
@@ -80,7 +80,7 @@ const BioDatas = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-main mb-2">Age Range</label>
+            <label className="block text-sm font-medium text-text-main dark:text-text-secondary mb-2">Age Range</label>
             <div className="flex gap-2 text-sm">
               <input
                 type="number"
@@ -89,9 +89,9 @@ const BioDatas = () => {
                 max="99"
                 onChange={(e) => setTempMinAge(e.target.value)}
                 onBlur={() => setAgeRange([+tempMinAge || 18, ageRange[1]])}
-                className="w-1/2 border px-3 py-2 rounded-md"
+                className="w-1/2 border border-gray-300 dark:border-gray-700 px-3 py-2 rounded-md bg-white dark:bg-gray-800 text-text-secondary dark:text-text-secondary transition-colors duration-300"
               />
-              <span className="self-center">to</span>
+              <span className="self-center text-text-main dark:text-text-secondary">to</span>
               <input
                 type="number"
                 value={tempMaxAge}
@@ -99,7 +99,7 @@ const BioDatas = () => {
                 max="99"
                 onChange={(e) => setTempMaxAge(e.target.value)}
                 onBlur={() => setAgeRange([ageRange[0], +tempMaxAge || 99])}
-                className="w-1/2 border px-3 py-2 rounded-md"
+                className="w-1/2 border border-gray-300 dark:border-gray-700 px-3 py-2 rounded-md bg-white dark:bg-gray-800 text-text-secondary dark:text-text-secondary transition-colors duration-300"
               />
             </div>
           </div>
@@ -109,9 +109,9 @@ const BioDatas = () => {
         <div className="md:col-span-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {isLoading ? (
-              <div className="h-16 w-16 mx-auto text-center col-span-3 border-4 border-dashed rounded-full animate-spin border-accent"></div>
+              <div className="h-16 w-16 mx-auto text-center col-span-3 border-4 border-dashed rounded-full animate-spin border-accent dark:border-accent/70"></div>
             ) : bioDatas.length === 0 ? (
-              <p className="text-center col-span-3 text-text-secondary">No biodatas found.</p>
+              <p className="text-center col-span-3 text-text-secondary dark:text-text-main">No biodatas found.</p>
             ) : (
               bioDatas.map((profile, i) => (
                 <motion.div
@@ -119,22 +119,22 @@ const BioDatas = () => {
                   initial={{ opacity: 0, y: 25 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
-                  className="relative group rounded-2xl overflow-hidden shadow hover:shadow-lg transition"
+                  className="relative group rounded-2xl overflow-hidden shadow hover:shadow-lg dark:shadow-gray-800 transition-shadow duration-300"
                 >
-                  <span className="absolute inset-px rounded-[inherit] bg-gradient-to-br from-accent/20 to-primary/10 opacity-0 group-hover:opacity-100 transition" />
-                  <div className="relative z-10 bg-white rounded-[inherit] p-6 flex flex-col items-center text-center">
+                  <span className="absolute inset-px rounded-[inherit] bg-gradient-to-br from-accent/20 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative z-10 bg-white dark:bg-bg-soft rounded-[inherit] p-6 flex flex-col items-center text-center transition-colors duration-300">
                     <img
                       src={profile.photoURL}
                       alt="Profile"
                       className="w-24 h-24 rounded-full object-cover ring-4 ring-primary/10 mb-4"
                     />
-                    <h4 className="text-lg font-heading text-text-main">
+                    <h4 className="text-lg font-heading text-text-main dark:text-text-secondary">
                       Biodata #{profile.bioData.bioDataId}
                     </h4>
-                    <p className="text-xs uppercase tracking-wide text-accent font-semibold mt-1">
+                    <p className="text-xs uppercase tracking-wide text-accent dark:text-accent font-semibold mt-1">
                       {profile.bioData.bioDataType}
                     </p>
-                    <div className="mt-3 text-sm text-text-secondary space-y-1 font-body">
+                    <div className="mt-3 text-sm text-text-secondary dark:text-text-main space-y-1 font-body">
                       <p>{profile.bioData.presentDivision}</p>
                       <p>
                         {profile.bioData.age} yrs &bull; {profile.bioData.occupation}
@@ -142,7 +142,7 @@ const BioDatas = () => {
                     </div>
                     <Link
                       to={`/user/view-bioData/${profile._id}`}
-                      className="mt-4 bg-accent text-white px-4 py-2 text-sm rounded-full hover:bg-primary transition"
+                      className="mt-4 bg-accent dark:bg-accent text-white px-4 py-2 text-sm rounded-full hover:bg-primary dark:hover:bg-primary transition-colors duration-300"
                     >
                       View Profile
                     </Link>
@@ -153,16 +153,16 @@ const BioDatas = () => {
           </div>
 
           {/* Pagination */}
-          <div className="flex flex-col sm:flex-row items-center justify-between mt-10 font-body text-sm text-text-secondary">
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-10 font-body text-sm text-text-secondary dark:text-text-main">
             <p className="mb-2 sm:mb-0">
               Showing {(page - 1) * limit + 1}‑{Math.min(page * limit, total)} of {total}
             </p>
-            <ul className="inline-flex items-center border rounded bg-white shadow-sm">
+            <ul className="inline-flex items-center border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-bg-soft shadow-sm dark:shadow-md transition-colors duration-300">
               <li>
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(page - 1)}
-                  className="px-3 py-1.5 disabled:text-gray-400"
+                  className="px-3 py-1.5 disabled:text-gray-400 dark:disabled:text-gray-600"
                 >
                   ‹
                 </button>
@@ -174,8 +174,8 @@ const BioDatas = () => {
                     className={clsx(
                       'px-3 py-1.5 rounded',
                       p + 1 === page
-                        ? 'bg-accent/10 text-primary font-semibold'
-                        : 'hover:bg-bg-soft'
+                        ? 'bg-accent/10 text-primary font-semibold dark:bg-accent/20 dark:text-accent'
+                        : 'hover:bg-bg-soft dark:hover:bg-gray-700'
                     )}
                   >
                     {p + 1}
@@ -186,7 +186,7 @@ const BioDatas = () => {
                 <button
                   disabled={page === numberOfPages}
                   onClick={() => setPage(page + 1)}
-                  className="px-3 py-1.5 disabled:text-gray-400"
+                  className="px-3 py-1.5 disabled:text-gray-400 dark:disabled:text-gray-600"
                 >
                   ›
                 </button>

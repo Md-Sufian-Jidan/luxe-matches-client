@@ -69,12 +69,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-soft px-6 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-bg-soft dark:bg-gray-900 px-6 py-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-md p-8 flex flex-col"
+        className="w-full max-w-md bg-white dark:bg-bg-soft rounded-2xl shadow-md p-8 flex flex-col"
       >
         {/* Logo */}
         <motion.div
@@ -83,7 +83,7 @@ const Login = () => {
         >
           <Link
             to="/"
-            className="inline-flex items-center gap-2 justify-center text-primary font-heading text-4xl select-none"
+            className="inline-flex items-center gap-2 justify-center text-primary dark:text-accent font-heading text-4xl select-none"
             aria-label="LuxeMatches Home"
           >
             💍 <span>LuxeMatches</span>
@@ -96,7 +96,7 @@ const Login = () => {
           <div className="flex flex-col">
             <label
               htmlFor="email"
-              className="mb-2 font-heading text-text-main text-lg"
+              className="mb-2 font-heading text-text-main dark:text-primary text-lg"
             >
               Email
             </label>
@@ -105,7 +105,7 @@ const Login = () => {
               type="email"
               placeholder="you@example.com"
               {...register('email', { required: 'Email is required' })}
-              className="font-body text-text-main rounded-2xl border border-primary px-4 py-3 focus:outline-none focus:ring-2 focus:ring-accent transition"
+              className="font-body text-text-main dark:text-text-secondary rounded-2xl border border-primary px-4 py-3 focus:outline-none focus:ring-2 focus:ring-accent transition"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-500 font-body">{errors.email.message}</p>
@@ -115,7 +115,7 @@ const Login = () => {
           <div className="flex flex-col relative">
             <label
               htmlFor="password"
-              className="mb-2 font-heading text-text-main text-lg"
+              className="mb-2 font-heading text-text-main dark:text-primary text-lg"
             >
               Password
             </label>
@@ -124,7 +124,7 @@ const Login = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               {...register('password', { required: 'Password is required' })}
-              className="font-body text-text-main rounded-2xl border border-primary px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-accent transition"
+              className="font-body text-text-main dark:text-text-secondary rounded-2xl border border-primary px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-accent transition"
             />
             <button
               type="button"
@@ -155,7 +155,7 @@ const Login = () => {
           Don&apos;t have an account?{' '}
           <Link
             to="/register"
-            className="text-primary font-heading underline hover:text-accent transition"
+            className="text-accent font-heading underline hover:text-primary transition"
           >
             Register
           </Link>
@@ -171,7 +171,7 @@ const Login = () => {
           type="button"
           onClick={handleGoogleLogin}
           whileHover={{ scale: 1.03 }}
-          className="flex items-center justify-center gap-3 w-full rounded-2xl border border-primary py-3 font-body text-text-main shadow-sm hover:border-accent hover:text-accent transition"
+          className="flex items-center justify-center gap-3 w-full rounded-2xl border border-primary py-3 font-body text-text-main dark:text-primary shadow-sm hover:border-accent hover:text-accent transition"
         >
           <FcGoogle size={24} />
           Continue with Google

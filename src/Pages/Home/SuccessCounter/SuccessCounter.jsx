@@ -22,9 +22,9 @@ const SuccessCounter = () => {
   ];
 
   return (
-    <section className="bg-bg-soft py-16">
+    <section className="bg-bg-soft dark:bg-gray-900 py-16 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-4xl font-heading text-primary font-semibold mb-12">
+        <h2 className="text-4xl font-heading text-primary dark:text-accent font-semibold mb-12">
           Our Success in Numbers
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -35,12 +35,12 @@ const SuccessCounter = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.15 }}
               viewport={{ once: true }}
-              className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition-all"
+              className="bg-white dark:bg-bg-soft p-6 rounded-2xl shadow hover:shadow-lg dark:shadow-black/30 dark:hover:shadow-xl transition-all"
             >
               <h3 className={`text-4xl font-heading font-bold ${counter.color}`}>
                 <CountUp end={counter.count} duration={3} />
               </h3>
-              <p className="mt-3 text-sm font-body text-text-secondary">
+              <p className="mt-3 text-sm font-body text-text-secondary dark:text-text-secondary">
                 {counter.title}
               </p>
             </motion.div>

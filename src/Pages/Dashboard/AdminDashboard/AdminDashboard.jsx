@@ -51,12 +51,16 @@ const AdminDashboard = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl shadow p-6 flex items-center gap-4"
+              className="bg-white dark:bg-bg-soft rounded-2xl shadow dark:shadow-md p-6 flex items-center gap-4"
             >
               <div className={`w-4 h-4 rounded-full ${card.color}`} />
               <div>
-                <p className="text-sm text-text-secondary">{card.label}</p>
-                <p className="text-xl font-semibold text-text-main">{card.value}</p>
+                <p className="text-sm text-text-secondary dark:text-text-secondary">
+                  {card.label}
+                </p>
+                <p className="text-xl font-semibold text-text-main dark:text-text-main">
+                  {card.value}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -67,9 +71,11 @@ const AdminDashboard = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl shadow p-6"
+          className="bg-white dark:bg-bg-soft rounded-2xl shadow dark:shadow-md p-6"
         >
-          <h3 className="text-xl font-heading text-primary mb-4">Biodata Distribution</h3>
+          <h3 className="text-xl font-heading text-primary dark:text-primary mb-4">
+            Biodata Distribution
+          </h3>
           <div className="w-full h-64">
             <ResponsiveContainer>
               <PieChart>
@@ -87,7 +93,16 @@ const AdminDashboard = () => {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ fontFamily: 'Inter, sans-serif', borderRadius: '0.75rem' }}
+                  contentStyle={{
+                    fontFamily: 'Inter, sans-serif',
+                    borderRadius: '0.75rem',
+                    backgroundColor: '#ffffff',
+                    color: '#1f2937',
+                  }}
+                  wrapperStyle={{
+                    backgroundColor: 'theme(colors.bg-soft)',
+                    color: 'theme(colors.text-main)',
+                  }}
                 />
               </PieChart>
             </ResponsiveContainer>
