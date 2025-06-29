@@ -58,7 +58,8 @@ const EditBioData = () => {
   const heights = ["4'8\"", "5'0\"", "5'4\"", "5'8\"", "6'0\""];
   const weights = ['45 kg', '50 kg', '55 kg', '60 kg', '70 kg', '80 kg'];
   const occupations = ['Student', 'Job', 'Housewife', 'Engineer', 'Doctor'];
-  const races = ['Asian', 'Arab', 'African', 'Other'];
+  const Nationality = ['Bangladeshi', 'Other'];
+  const Religion = ['Islam', 'Hindu', 'Buddhists', 'Christians', 'Other'];
 
   if (isLoading) {
     return (
@@ -97,7 +98,8 @@ const EditBioData = () => {
             ['Weight', 'weight', 'select', weights],
             ['Age', 'age', 'number'],
             ['Occupation', 'occupation', 'select', occupations],
-            ['Race', 'race', 'select', races],
+            ['Nationality', 'nationality', 'select', Nationality],
+            ['Religion', 'religion', 'select', Religion],
             ['Father’s Name', 'fathersName', 'text'],
             ['Mother’s Name', 'mothersName', 'text'],
             ['Permanent Division', 'permanentDivision', 'select', divisions],

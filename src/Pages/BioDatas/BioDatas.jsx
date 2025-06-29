@@ -9,7 +9,7 @@ import useAxiosSecure from '../../Hooks/useAxiosSecure';
 const BioDatas = () => {
   const divisions = ['Dhaka', 'Chattogram', 'Rangpur', 'Barisal', 'Khulna', 'Maymansign', 'Sylhet'];
   const [genderFilter, setGenderFilter] = useState('');
-  const [divisionFilter, setDivisionFilter] = useState('');
+  const [divisionFilter, setDivisionFilter] = useState([]);
   const [ageRange, setAgeRange] = useState([18, 40]);
   const [tempMinAge, setTempMinAge] = useState(ageRange[0]);
   const [tempMaxAge, setTempMaxAge] = useState(ageRange[1]);
@@ -20,6 +20,7 @@ const BioDatas = () => {
   const limit = 10;
   const numberOfPages = Math.ceil(total / limit);
   const pages = [...Array(numberOfPages).keys()];
+  console.log(divisionFilter);
 
   const { data: bioDatas = [], isLoading } = useQuery({
     queryKey: ['bioDatas', page, limit, genderFilter, divisionFilter, ageRange],
@@ -29,7 +30,7 @@ const BioDatas = () => {
           page,
           limit,
           gender: genderFilter,
-          division: divisionFilter,
+          divisionFilter,
           minAge: ageRange[0],
           maxAge: ageRange[1],
         },
@@ -64,19 +65,37 @@ const BioDatas = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-text-main dark:text-text-secondary mb-2">Division</label>
-            <select
-              value={divisionFilter}
-              onChange={(e) => setDivisionFilter(e.target.value)}
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 text-sm text-text-secondary dark:text-text-secondary bg-white dark:bg-gray-800 transition-colors duration-300"
-            >
-              <option value="">All</option>
-              {divisions.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
+            <label className="block text-sm font-medium text-text-main dark:text-text-secondary mb-2">Home Division</label>
+            <div className="space-y-2 max-h-48 overflow-y-auto border rounded-md px-3 py-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-sm">
+              {['All', ...divisions].map((division) => (
+                <div key={division} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id={division}
+                    checked={
+                      division === 'All'
+                        ? divisionFilter.length === 0
+                        : divisionFilter.includes(division)
+                    }
+                    onChange={() => {
+                      if (division === 'All') {
+                        setDivisionFilter([]);
+                      } else {
+                        setDivisionFilter((prev) =>
+                          prev.includes(division)
+                            ? prev.filter((d) => d !== division)
+                            : [...prev, division]
+                        );
+                      }
+                    }}
+                    className="accent-accent dark:accent-primary"
+                  />
+                  <label htmlFor={division} className="text-text-secondary dark:text-text-main">
+                    {division}
+                  </label>
+                </div>
               ))}
-            </select>
+            </div>
           </div>
 
           <div>
